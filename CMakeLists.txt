@@ -3,31 +3,37 @@
 #
 #
 
-SET(PROJECT_NAME "UserspacePWM")
+set(PROJECT_NAME "libuspwm")
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-PROJECT(${PROJECT_NAME})
+cmake_minimum_required(VERSION 2.8.11)
+project(${PROJECT_NAME})
 
 ENABLE_TESTING()
 
-SET(LC_LIB "userspacepwm")
-SET(LC_INCLUDE "${PROJECT_SOURCE_DIR}/include")
-SET(LC_SRC "${PROJECT_SOURCE_DIR}/src")
+set(USPWM_LIB "uspwm")
+set(USPWM_INCLUDE "${PROJECT_SOURCE_DIR}/include")
+set(USPWM_SRC "${PROJECT_SOURCE_DIR}/src")
+set(USPWM_TEST "${PROJECT_SOURCE_DIR}/test")
 
 # Uncomment to make makefiles verbose
 # set(CMAKE_VERBOSE_MAKEFILE ON)
 
-# gcc flags
-SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -Wall")
-SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -DDEBUG")
-SET(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -DNDEBUG -O3")
+# Compiler Options
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -Wall")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -DDEBUG")
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -DNDEBUG -O3")
 
-# Source Code
-ADD_SUBDIRECTORY(${LC_SRC})
-INCLUDE_DIRECTORIES(${LC_INCLUDE})
+# Source 
+add_subdirectory(${USPWM_SRC})
+include_directories(${USPWM_INCLUDE})
 
-# LIBRARY
-ADD_LIBRARY(${LC_LIB} SHARED ${SOURCE_FILES})
+# Library
+add_library(${USPWM_LIB} SHARED ${SOURCE_FILES})
 
 # Tests
-ADD_SUBDIRECTORY(test)
+add_subdirectory(${USPWM_TEST})
+
+
+# Installation
+set(CMAKE_INSTALL_LIBDIR lib)
+set(CMAKE_INSTALL_INCLUDEDIR include)
