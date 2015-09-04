@@ -33,7 +33,6 @@ add_library(${USPWM_LIB} SHARED ${SOURCE_FILES})
 # Tests
 add_subdirectory(${USPWM_TEST})
 
-
 # Installation
 set(CMAKE_INSTALL_LIBDIR lib)
 set(CMAKE_INSTALL_INCLUDEDIR include)
