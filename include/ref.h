@@ -20,19 +20,49 @@
  */
 
 /**
- * @file pwm_internal.h
+ * @file ref.h
  * @brief 
  * @author Travis Lane
  * @version 0.0.1
- * @date 2015-09-05
+ * @date 2015-09-06
  */
 
+#include <atomic.h>
+#include <assert.h>
 
-struct us_pwm_controller_t {
+typedef void (*usp_ref_free_t)(void *);
 
-};
+#define USP_REF_PRIVATE \
+	atomic_uint 		usp_ref_count; \
+	usp_ref_free_t 	usp_ref_free;
 
-struct us_pwm_t {
+/**
+ * @brief Initialize a new reference counting object. 
+ *
+ * @param ref The reference counting object to initialize.
+ * @param ref_free The function used to free the reference counter.
+ */
+#define usp_ref_init(ref) \
+	assert(ref != NULL) \
+	ref->usp_ref_count = 0; \
+	ref->usp_ref_free = ref_free;
 
+/**
+ * @brief Incremente the reference on a reference counted object.
+ *
+ * @param ref The object to reference.
+ */
+#define usp_ref(ref) \
+	assert(ref != NULL); \
+	atomic_fetch_add(&(ref->usp_ref_count));
 
-};
+/**
+ * @brief Decrement the reference on a reference counted object.
+ *
+ * @param ref The object to unreference. If there are no reference
+ * holders, the reference is dropped.
+ */
+#define usp_unref(ref) \
+	assert(ref != NULL); \
+	if (atomic_fetch_sub(&(ref->usp_ref_count), 1) == 0) \
+		ref->usp_ref_free(ref);
