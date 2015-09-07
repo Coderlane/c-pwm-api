@@ -9,7 +9,7 @@ addons:
     - cmake
     - check
     - libudev-dev
-    - ninja-buuild
+    - ninja-build
     - pkg-config
 
 before_script:
