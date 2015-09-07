@@ -20,14 +20,14 @@
  */
 
 /**
- * @file ref.h
+ * @file ref_internal.h
  * @brief 
  * @author Travis Lane
  * @version 0.0.1
  * @date 2015-09-06
  */
 
-#include <atomic.h>
+#include <stdatomic.h>
 #include <assert.h>
 
 typedef void (*usp_ref_free_t)(void *);
@@ -42,8 +42,8 @@ typedef void (*usp_ref_free_t)(void *);
  * @param ref The reference counting object to initialize.
  * @param ref_free The function used to free the reference counter.
  */
-#define usp_ref_init(ref) \
-	assert(ref != NULL) \
+#define usp_ref_init(ref, ref_free) \
+	assert(ref != NULL); \
 	ref->usp_ref_count = 0; \
 	ref->usp_ref_free = ref_free;
 
@@ -54,7 +54,7 @@ typedef void (*usp_ref_free_t)(void *);
  */
 #define usp_ref(ref) \
 	assert(ref != NULL); \
-	atomic_fetch_add(&(ref->usp_ref_count));
+	atomic_fetch_add(&(ref->usp_ref_count), 1);
 
 /**
  * @brief Decrement the reference on a reference counted object.
