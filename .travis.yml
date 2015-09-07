@@ -1,7 +1,7 @@
 language: c
 
 compiler:
-  - clang
+  - clang-3.6
 
 addons:
   apt:
@@ -9,14 +9,18 @@ addons:
     - cmake
     - check
     - libudev-dev
-    - ninja-build
     - pkg-config
+    - clang-3.6
+    sources:
+    - kalakris-cmake
+    - ubuntu-toolchain-r-test
+    - llvm-toolchain-precise-3.6
 
 before_script:
   - mkdir build
   - cd build
-  - cmake -DCMAKE_BUILD_TYPE=Debug -GNinja ..
+  - cmake -DCMAKE_BUILD_TYPE=Debug ..
 
 script:
-  - ninja
-  - ctestt --output-on-failure
+  - make 
+  - ctest --output-on-failure
