@@ -1,0 +1,26 @@
+language: c
+
+compiler:
+  - clang-3.6
+
+addons:
+  apt:
+    packages:
+    - cmake
+    - check
+    - libudev-dev
+    - pkg-config
+    - clang-3.6
+    sources:
+    - kalakris-cmake
+    - ubuntu-toolchain-r-test
+    - llvm-toolchain-precise-3.6
+
+before_script:
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=Debug ..
+
+script:
+  - make 
+  - ctest --output-on-failure
