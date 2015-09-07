@@ -1,0 +1,22 @@
+language: c
+
+compiler:
+  - clang
+
+addons:
+  apt:
+    packages:
+    - cmake
+    - check
+    - libudev-dev
+    - ninja-buuild
+    - pkg-config
+
+before_script:
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=Debug ..
+
+script:
+  - ninja
+  - ctestt --output-on-failure
