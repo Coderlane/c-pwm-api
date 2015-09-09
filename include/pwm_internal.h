@@ -1,14 +1,15 @@
 /**
  * @file pwm_internal.h
- * @brief 
+ * @brief
  * @author Travis Lane
  * @version 0.0.1
  * @date 2015-09-05
  */
 
+struct udev;
 
 struct us_pwm_controller_t {
-
+  struct udev *uspc_udev;
 };
 
 struct us_pwm_t {
