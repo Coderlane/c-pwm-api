@@ -27,7 +27,12 @@
  * @date 2015-09-05
  */
 
+#ifndef USP_ERRORS_H
+#define USP_ERRORS_H
+
 enum us_pwm_error_e {
 	USP_OK = 0,
 	USP_GENERIC_ERROR = 1
 };
+
+#endif /* USP_ERRORS_H */

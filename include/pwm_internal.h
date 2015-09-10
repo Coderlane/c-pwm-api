@@ -6,6 +6,9 @@
  * @date 2015-09-05
  */
 
+#ifndef USP_PWM_INTERNAL_H
+#define USP_PWM_INTERNAL_H
+
 struct udev;
 
 struct us_pwm_controller_t {
@@ -16,3 +19,5 @@ struct us_pwm_t {
 
 
 };
+
+#endif /* USP_PWM_INTERNAL_H */

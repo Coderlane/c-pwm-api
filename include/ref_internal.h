@@ -6,6 +6,9 @@
  * @date 2015-09-06
  */
 
+#ifndef USP_REF_INTERNAL_H
+#define USP_REF_INTERNAL_H
+
 #include <assert.h>
 #include <stdatomic.h>
 #include <stdint.h>
@@ -46,3 +49,5 @@ typedef void (*usp_ref_free_t)(void *);
   assert(ref != NULL); \
   if (atomic_fetch_sub(&(ref->usp_ref_count), 1) == 0) \
     ref->usp_ref_free(ref);
+
+#endif /* USP_REF_INTERNAL_H */
