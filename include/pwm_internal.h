@@ -12,6 +12,7 @@
 #include "ref_internal.h"
 
 struct udev;
+struct udev_device;
 
 struct us_pwm_attr_match_t;
 struct us_pwm_controller_t;
@@ -27,8 +28,8 @@ enum us_pwm_attr_type_e {
 
 enum us_pwm_state_e { USPWM_DISABLED = 0, USPWM_ENABLED = 1 };
 
-typedef int (*us_pwm_state_func_t)(struct us_pwm_t*, enum us_pwm_state_e);
-typedef int (*us_pwm_generic_func_t)(struct us_pwm_t*, void *);
+typedef int (*us_pwm_state_func_t)(struct us_pwm_t *, enum us_pwm_state_e);
+typedef int (*us_pwm_generic_func_t)(struct us_pwm_t *, void *);
 
 struct us_pwm_attr_match_t {
   enum us_pwm_attr_type_e uspam_type;
@@ -42,9 +43,9 @@ struct us_pwm_controller_t {
 
 struct us_pwm_t {
   USP_REF_PRIVATE
+  struct udev_device *uspwm_device;
   us_pwm_state_func_t uspwm_enable_func;
   us_pwm_state_func_t uspwm_disable_func;
-
 };
 
 struct us_pwm_attr_match_t *us_pwm_attr_match_new(enum us_pwm_attr_type_e type,
@@ -52,7 +53,8 @@ struct us_pwm_attr_match_t *us_pwm_attr_match_new(enum us_pwm_attr_type_e type,
                                                   const char *value);
 void us_pwm_attr_match_delete(struct us_pwm_attr_match_t *usp_attr_match);
 
-struct us_pwm_t *us_pwm_new(us_pwm_state_func_t enable_func,
+struct us_pwm_t *us_pwm_new(struct udev_device *device,
+                            us_pwm_state_func_t enable_func,
                             us_pwm_state_func_t disable_func);
 void us_pwm_delete(void *ctx);
 

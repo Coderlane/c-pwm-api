@@ -15,19 +15,19 @@
 
 typedef void (*usp_ref_delete_t)(void *);
 
-#define USP_REF_PRIVATE \
-  atomic_uint     usp_ref_count; \
-  usp_ref_delete_t  usp_ref_delete;
+#define USP_REF_PRIVATE      \
+  atomic_uint usp_ref_count; \
+  usp_ref_delete_t usp_ref_delete;
 
 /**
- * @brief Initialize a new reference counting object. 
+ * @brief Initialize a new reference counting object.
  *
  * @param ref The reference counting object to initialize.
  * @param ref_delete The function used to delete the reference counter.
  */
 #define usp_ref_init(ref, ref_delete) \
-  assert(ref != NULL); \
-  ref->usp_ref_count = 0; \
+  assert(ref != NULL);                \
+  ref->usp_ref_count = 0;             \
   ref->usp_ref_delete = ref_delete;
 
 /**
@@ -35,7 +35,7 @@ typedef void (*usp_ref_delete_t)(void *);
  *
  * @param ref The object to reference.
  */
-#define usp_ref(ref) \
+#define usp_ref(ref)   \
   assert(ref != NULL); \
   atomic_fetch_add(&(ref->usp_ref_count), 1);
 
@@ -43,10 +43,10 @@ typedef void (*usp_ref_delete_t)(void *);
  * @brief Decrement the reference on a reference counted object.
  *
  * @param ref The object to unreference. If there are no reference
- * holders, the reference is dropped.
+ * holders, the object is destroyed.
  */
-#define usp_unref(ref) \
-  assert(ref != NULL); \
+#define usp_unref(ref)                                 \
+  assert(ref != NULL);                                 \
   if (atomic_fetch_sub(&(ref->usp_ref_count), 1) == 0) \
     ref->usp_ref_delete(ref);
 

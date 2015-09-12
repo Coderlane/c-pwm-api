@@ -1,6 +1,6 @@
 /**
  * @file pwm_controller.c
- * @brief 
+ * @brief
  * @author Travis Lane
  * @version 0.0.1
  * @date 2015-09-11
@@ -15,7 +15,7 @@
 #include "pwm_internal.h"
 #include "pwm.h"
 
-/** 
+/**
  * Controller
  */
 
@@ -27,30 +27,30 @@
 struct us_pwm_controller_t *
 us_pwm_controller_new()
 {
-  struct us_pwm_controller_t *usp_ctrl = NULL;
-  usp_ctrl = calloc(sizeof(struct us_pwm_controller_t), 1);
-  assert(usp_ctrl != NULL);
+  struct us_pwm_controller_t *ctrl = NULL;
+  ctrl = calloc(sizeof(struct us_pwm_controller_t), 1);
+  assert(ctrl != NULL);
 
-  usp_ctrl->uspc_udev = udev_new();
+  ctrl->uspc_udev = udev_new();
 
-  return usp_ctrl;
+  return ctrl;
 }
 
 /**
  * @brief Delete a PWM controller and all attached PWMs.
  *
- * @param usp_ctrl The PWM controller to delete.
+ * @param ctrl The PWM controller to delete.
  */
 void
-us_pwm_controller_delete(struct us_pwm_controller_t *usp_ctrl)
+us_pwm_controller_delete(struct us_pwm_controller_t *ctrl)
 {
-  assert(usp_ctrl != NULL);
+  assert(ctrl != NULL);
 
-  udev_unref(usp_ctrl->uspc_udev);
-  free(usp_ctrl);
+  udev_unref(ctrl->uspc_udev);
+  free(ctrl);
 }
 
-/** 
+/**
  * Attribute Matching
  */
 
@@ -67,26 +67,26 @@ struct us_pwm_attr_match_t *
 us_pwm_attr_match_new(enum us_pwm_attr_type_e type, const char *key,
                       const char *value)
 {
-  struct us_pwm_attr_match_t *usp_attr_match = NULL;
-  usp_attr_match = malloc(sizeof(struct us_pwm_attr_match_t));
-  assert(usp_attr_match != NULL);
+  struct us_pwm_attr_match_t *attr_match = NULL;
+  attr_match = malloc(sizeof(struct us_pwm_attr_match_t));
+  assert(attr_match != NULL);
 
-  usp_attr_match->uspam_type = type;
-  usp_attr_match->uspam_key = key;
-  usp_attr_match->uspam_value = value;
+  attr_match->uspam_type = type;
+  attr_match->uspam_key = key;
+  attr_match->uspam_value = value;
 
-  return usp_attr_match;
+  return attr_match;
 }
 
 /**
- * @brief 
+ * @brief
  *
- * @param usp_attr_match
+ * @param attr_match
  */
 void
-us_pwm_attr_match_delete(struct us_pwm_attr_match_t *usp_attr_match)
+us_pwm_attr_match_delete(struct us_pwm_attr_match_t *attr_match)
 {
-  assert(usp_attr_match != NULL);
-  free(usp_attr_match);
+  assert(attr_match != NULL);
+  free(attr_match);
 }
 
