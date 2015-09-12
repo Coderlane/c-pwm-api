@@ -28,7 +28,6 @@ struct us_pwm_controller_t *
 us_pwm_controller_new()
 {
   struct us_pwm_controller_t *usp_ctrl = NULL;
-
   usp_ctrl = calloc(sizeof(struct us_pwm_controller_t), 1);
   assert(usp_ctrl != NULL);
 
@@ -69,8 +68,9 @@ us_pwm_attr_match_new(enum us_pwm_attr_type_e type, const char *key,
                       const char *value)
 {
   struct us_pwm_attr_match_t *usp_attr_match = NULL;
-
   usp_attr_match = malloc(sizeof(struct us_pwm_attr_match_t));
+  assert(usp_attr_match != NULL);
+
   usp_attr_match->uspam_type = type;
   usp_attr_match->uspam_key = key;
   usp_attr_match->uspam_value = value;
@@ -86,6 +86,7 @@ us_pwm_attr_match_new(enum us_pwm_attr_type_e type, const char *key,
 void
 us_pwm_attr_match_delete(struct us_pwm_attr_match_t *usp_attr_match)
 {
+  assert(usp_attr_match != NULL);
   free(usp_attr_match);
 }
 

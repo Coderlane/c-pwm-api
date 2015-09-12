@@ -13,22 +13,22 @@
 #include <stdatomic.h>
 #include <stdint.h>
 
-typedef void (*usp_ref_free_t)(void *);
+typedef void (*usp_ref_delete_t)(void *);
 
 #define USP_REF_PRIVATE \
   atomic_uint     usp_ref_count; \
-  usp_ref_free_t  usp_ref_free;
+  usp_ref_delete_t  usp_ref_delete;
 
 /**
  * @brief Initialize a new reference counting object. 
  *
  * @param ref The reference counting object to initialize.
- * @param ref_free The function used to free the reference counter.
+ * @param ref_delete The function used to delete the reference counter.
  */
-#define usp_ref_init(ref, ref_free) \
+#define usp_ref_init(ref, ref_delete) \
   assert(ref != NULL); \
   ref->usp_ref_count = 0; \
-  ref->usp_ref_free = ref_free;
+  ref->usp_ref_delete = ref_delete;
 
 /**
  * @brief Increment the reference on a reference counted object.
@@ -48,6 +48,6 @@ typedef void (*usp_ref_free_t)(void *);
 #define usp_unref(ref) \
   assert(ref != NULL); \
   if (atomic_fetch_sub(&(ref->usp_ref_count), 1) == 0) \
-    ref->usp_ref_free(ref);
+    ref->usp_ref_delete(ref);
 
 #endif /* USP_REF_INTERNAL_H */

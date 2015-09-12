@@ -15,6 +15,43 @@
 #include "pwm_internal.h"
 #include "pwm.h"
 
+struct us_pwm_t *
+us_pwm_new(us_pwm_state_func_t enable_func, us_pwm_state_func_t disable_func)
+{
+  struct us_pwm_t *us_pwm = NULL;
+  us_pwm = malloc(sizeof(struct us_pwm_t));
+  assert(us_pwm != NULL);
+
+  us_pwm->uspwm_enable_func = enable_func;
+  us_pwm->uspwm_disable_func = disable_func;
+
+  usp_ref_init(us_pwm, us_pwm_delete);
+
+  return us_pwm;
+}
+
+void
+us_pwm_delete(void *ctx)
+{
+  struct us_pwm_t *us_pwm = ctx;
+  assert(us_pwm != NULL);
+  assert(us_pwm->usp_ref_count == 0);
+
+  free(us_pwm);
+}
+
+void
+us_pwm_ref(struct us_pwm_t *us_pwm)
+{
+  usp_ref(us_pwm);
+}
+
+void
+us_pwm_unref(struct us_pwm_t *us_pwm)
+{
+  usp_unref(us_pwm);
+}
+
 /**
  * @brief Enable a generic pwm.
  *

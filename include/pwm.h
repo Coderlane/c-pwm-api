@@ -20,6 +20,9 @@ enum us_pwm_error_e {
 struct us_pwm_controller_t *us_pwm_controller_new();
 void us_pwm_controller_delete(struct us_pwm_controller_t *usp_ctrl);
 
+void us_pwm_ref(struct us_pwm_t *us_pwm);
+void us_pwm_unref(struct us_pwm_t *us_pwm);
+
 int us_pwm_enable(struct us_pwm_t *us_pwm);
 int us_pwn_disable(struct us_pwm_t *us_pwm);
 
