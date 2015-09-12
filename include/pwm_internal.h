@@ -11,6 +11,10 @@
 
 struct udev;
 
+struct us_pwm_attr_match_t;
+struct us_pwm_controller_t;
+struct us_pwm_t;
+
 enum us_pwm_attr_type_e {
   USPAT_SUBSYSTEM,
   USPAT_SYSATTR,
@@ -18,6 +22,10 @@ enum us_pwm_attr_type_e {
   USPAT_TAG,
   USPAT_SYSNAME
 };
+
+enum us_pwm_state_e { USPWM_DISABLED = 0, USPWM_ENABLED = 1 };
+
+typedef int (*us_pwm_state_func_t)(struct us_pwm_t*, enum us_pwm_state_e);
 
 struct us_pwm_attr_match_t {
   enum us_pwm_attr_type_e uspam_type;
@@ -30,7 +38,6 @@ struct us_pwm_controller_t {
 };
 
 struct us_pwm_t {
-
 };
 
 struct us_pwm_attr_match_t *us_pwm_attr_match_new(enum us_pwm_attr_type_e type,
