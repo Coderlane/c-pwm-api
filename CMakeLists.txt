@@ -8,7 +8,11 @@ set(PROJECT_NAME "libuspwm")
 cmake_minimum_required(VERSION 2.8)
 project(${PROJECT_NAME})
 
-ENABLE_TESTING()
+include(FindPkgConfig)
+include(CMakePackageConfigHelpers)
+pkg_search_module(UDEV REQUIRED libudev)
+
+enable_testing()
 
 set(USPWM_LIB "uspwm")
 set(USPWM_INCLUDE "${PROJECT_SOURCE_DIR}/include")
@@ -26,9 +30,11 @@ set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -DNDEBUG -O3")
 # Source 
 add_subdirectory(${USPWM_SRC})
 include_directories(${USPWM_INCLUDE})
+include_directories(${UDEV_INCLUDE_DIR})
 
 # Library
 add_library(${USPWM_LIB} SHARED ${SOURCE_FILES})
+target_link_libraries(${USPWM_LIB} ${UDEV_LIBRARY})
 
 # Tests
 add_subdirectory(${USPWM_TEST})
