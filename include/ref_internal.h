@@ -16,7 +16,7 @@
 typedef void (*usp_ref_free_t)(void *);
 
 #define USP_REF_PRIVATE \
-  uint32_t        usp_ref_count; \
+  atomic_uint     usp_ref_count; \
   usp_ref_free_t  usp_ref_free;
 
 /**
