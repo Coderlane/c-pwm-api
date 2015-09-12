@@ -30,11 +30,11 @@ set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -DNDEBUG -O3")
 # Source 
 add_subdirectory(${USPWM_SRC})
 include_directories(${USPWM_INCLUDE})
-include_directories(${UDEV_INCLUDE_DIR})
+include_directories(${UDEV_INCLUDE_DIRS})
 
 # Library
 add_library(${USPWM_LIB} SHARED ${SOURCE_FILES})
-target_link_libraries(${USPWM_LIB} ${UDEV_LIBRARY})
+target_link_libraries(${USPWM_LIB} ${UDEV_LIBRARIES})
 
 # Tests
 add_subdirectory(${USPWM_TEST})
