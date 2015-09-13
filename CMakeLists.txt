@@ -23,11 +23,11 @@ set(USPWM_TEST "${PROJECT_SOURCE_DIR}/test")
 # set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # Compiler Options
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -Wall")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -Wall -Wextra -Wpedantic")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -DDEBUG")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -DNDEBUG -O3")
 
-# Source 
+# Source
 add_subdirectory(${USPWM_SRC})
 include_directories(${USPWM_INCLUDE})
 include_directories(${UDEV_INCLUDE_DIRS})
