@@ -11,6 +11,8 @@
 
 #include "ref_internal.h"
 
+#define INT_STR_LEN 12
+
 struct udev;
 struct udev_device;
 
@@ -29,6 +31,8 @@ enum us_pwm_attr_type_e {
 enum us_pwm_state_e { USPWM_DISABLED = 0, USPWM_ENABLED = 1 };
 
 typedef int (*us_pwm_state_func_t)(struct us_pwm_t *, enum us_pwm_state_e);
+typedef int (*us_pwm_set_float_func_t)(struct us_pwm_t*, float);
+typedef int (*us_pwm_get_float_func_t)(struct us_pwm_t*, float *);
 typedef int (*us_pwm_generic_func_t)(struct us_pwm_t *, void *);
 
 struct us_pwm_attr_match_t {
@@ -46,8 +50,10 @@ struct us_pwm_t {
   struct udev_device *uspwm_device;
   us_pwm_state_func_t uspwm_enable_func;
   us_pwm_state_func_t uspwm_disable_func;
-  us_pwm_generic_func_t uspwm_set_duty_cycle_func;
-  us_pwm_generic_func_t uspwm_set_frequency_func;
+  us_pwm_set_float_func_t uspwm_set_duty_cycle_func;
+  us_pwm_set_float_func_t uspwm_set_frequency_func;
+  us_pwm_get_float_func_t uspwm_get_duty_cycle_func;
+  us_pwm_get_float_func_t uspwm_get_frequency_func;
 };
 
 struct us_pwm_attr_match_t *us_pwm_attr_match_new(enum us_pwm_attr_type_e type,

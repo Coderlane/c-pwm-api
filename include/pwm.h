@@ -29,14 +29,14 @@ void us_pwm_unref(struct us_pwm_t *pwm);
 int us_pwm_enable(struct us_pwm_t *pwm);
 int us_pwm_disable(struct us_pwm_t *pwm);
 
-int us_pwn_set_duty_cycle(struct us_pwm_t *pwm, int32_t duty_cycle);
-// int us_pwn_set_period(struct us_pwm_t *pwm, int32_t period);
-int us_pwm_set_frequency(struct us_pwm_t *pwm, int32_t frequency);
-// int us_pwn_set_polarity(struct us_pwm_t *pwm, int32_t polarity);
+int us_pwn_set_duty_cycle(struct us_pwm_t *pwm, float duty_cycle);
+// int us_pwn_set_period(struct us_pwm_t *pwm, float period);
+int us_pwm_set_frequency(struct us_pwm_t *pwm, float frequency);
+// int us_pwn_set_polarity(struct us_pwm_t *pwm, float polarity);
 
-int us_pwn_get_duty_cycle(struct us_pwm_t *pwm, int32_t *out_duty_cycle);
-// int us_pwn_get_period(struct us_pwm_t *pwm, int32_t *out_period);
-int us_pwm_get_frequency(struct us_pwm_t *pwm, int32_t *out_frequency);
-// int us_pwn_get_polarity(struct us_pwm_t *pwm, int32_t *out_polarity);
+int us_pwn_get_duty_cycle(struct us_pwm_t *pwm, float *out_duty_cycle);
+// int us_pwn_get_period(struct us_pwm_t *pwm, float *out_period);
+int us_pwm_get_frequency(struct us_pwm_t *pwm, float *out_frequency);
+// int us_pwn_get_polarity(struct us_pwm_t *pwm, float *out_polarity);
 
 #endif /* USP_PWM_H */

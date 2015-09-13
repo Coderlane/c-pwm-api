@@ -9,8 +9,10 @@
 #include <libudev.h>
 
 #include <assert.h>
+#include <inttypes.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "pwm_internal.h"
 #include "pwm.h"
@@ -18,8 +20,7 @@
 /**
  * @brief
  *
- * @param enable_func
- * @param disable_func
+ * @param device
  *
  * @return
  */
@@ -57,9 +58,9 @@ us_pwm_delete(void *ctx)
 }
 
 /**
- * @brief
+ * @brief Take a reference on a pwm.
  *
- * @param pwm
+ * @param pwm The pwm to reference.
  */
 void
 us_pwm_ref(struct us_pwm_t *pwm)
@@ -68,9 +69,10 @@ us_pwm_ref(struct us_pwm_t *pwm)
 }
 
 /**
- * @brief
+ * @brief Unreference a pwm. If there are no more references
+ * to the pwm, the device will be freed.
  *
- * @param pwm
+ * @param pwm The pwm to unreference.
  */
 void
 us_pwm_unref(struct us_pwm_t *pwm)
@@ -110,4 +112,74 @@ us_pwm_disable(struct us_pwm_t *pwm)
   assert(pwm->uspwm_disable_func != NULL);
 
   return pwm->uspwm_disable_func(pwm, USPWM_DISABLED);
+}
+
+/**
+ * @brief Set the duty cycle of the pwm as a percentage from 0 to 100.
+ *
+ * @param pwm The pwm to set the duty cycle of.
+ * @param duty_cycle The new duty cycle for the pwm.
+ *
+ * @return A status code.
+ */
+int
+us_pwn_set_duty_cycle(struct us_pwm_t *pwm, float duty_cycle)
+{
+  assert(pwm != NULL);
+  assert(pwm->uspwm_set_duty_cycle_func != NULL);
+
+  return pwm->uspwm_set_duty_cycle_func(pwm, duty_cycle);
+}
+
+/**
+ * @brief Set the frequency of the pwm in hertz.
+ *
+ * @param pwm The pwm to set the frequency of.
+ * @param frequency The new frequency for the pwm.
+ *
+ * @return A status code.
+ */
+int
+us_pwm_set_frequency(struct us_pwm_t *pwm, float frequency)
+{
+  assert(pwm != NULL);
+  assert(pwm->uspwm_set_frequency_func != NULL);
+
+  return pwm->uspwm_set_duty_cycle_func(pwm, frequency);
+}
+
+/**
+ * @brief Get the current duty cycle of the pwm as a percentage.
+ *
+ * @param pwm The pwm to get the duty_cycle of.
+ * @param out_duty_cycle The current duty cycle of the pwm.
+ *
+ * @return A status code.
+ */
+int
+us_pwn_get_duty_cycle(struct us_pwm_t *pwm, float *out_duty_cycle)
+{
+  assert(pwm != NULL);
+  assert(out_duty_cycle != NULL);
+  assert(pwm->uspwm_get_duty_cycle_func != NULL);
+
+  return pwm->uspwm_get_duty_cycle_func(pwm, out_duty_cycle);
+}
+
+/**
+ * @brief Get the current frequency of the PWM in hertz.
+ *
+ * @param pwm The pwm to get the frequency of.
+ * @param out_frequency The current frequency of the pwm.
+ *
+ * @return A status code.
+ */
+int
+us_pwm_get_frequency(struct us_pwm_t *pwm, float *out_frequency)
+{
+  assert(pwm != NULL);
+  assert(out_frequency != NULL);
+  assert(pwm->uspwm_get_frequency_func != NULL);
+
+  return pwm->uspwm_get_duty_cycle_func(pwm, out_frequency);
 }

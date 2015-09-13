@@ -55,13 +55,15 @@ us_pwm_controller_delete(struct us_pwm_controller_t *ctrl)
  */
 
 /**
- * @brief
+ * @brief Create a new attribute match object. The key and value will
+ * not be copied, so please don't free them.
  *
- * @param type
- * @param key
- * @param value
+ * @param type The type of the attribute to match.
+ * @param key The attribute name (required).
+ * @param value The value of the attribute to match, or NULL if you
+ * don't need to match specific values.
  *
- * @return
+ * @return A new attribute match object.
  */
 struct us_pwm_attr_match_t *
 us_pwm_attr_match_new(enum us_pwm_attr_type_e type, const char *key,
@@ -79,9 +81,9 @@ us_pwm_attr_match_new(enum us_pwm_attr_type_e type, const char *key,
 }
 
 /**
- * @brief
+ * @brief Destroy a attribute match object.
  *
- * @param attr_match
+ * @param attr_match The attribute match object to destroy.
  */
 void
 us_pwm_attr_match_delete(struct us_pwm_attr_match_t *attr_match)
