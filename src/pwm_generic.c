@@ -24,17 +24,17 @@
  * @return
  */
 struct us_pwm_t *
-us_pwm_new(struct udev_device *device, us_pwm_state_func_t enable_func,
-           us_pwm_state_func_t disable_func)
+us_pwm_new(struct udev_device *device)
 {
   struct us_pwm_t *pwm = NULL;
-  pwm = malloc(sizeof(struct us_pwm_t));
+  assert(device != NULL);
+
+  pwm = calloc(sizeof(struct us_pwm_t), 1);
   assert(pwm != NULL);
 
   pwm->uspwm_device = device;
-  pwm->uspwm_enable_func = enable_func;
-  pwm->uspwm_disable_func = disable_func;
 
+  udev_device_ref(pwm->uspwm_device);
   usp_ref_init(pwm, us_pwm_delete);
 
   return pwm;
@@ -52,6 +52,7 @@ us_pwm_delete(void *ctx)
   assert(pwm != NULL);
   assert(pwm->usp_ref_count == 0);
 
+  udev_device_unref(pwm->uspwm_device);
   free(pwm);
 }
 

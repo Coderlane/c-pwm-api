@@ -46,6 +46,8 @@ struct us_pwm_t {
   struct udev_device *uspwm_device;
   us_pwm_state_func_t uspwm_enable_func;
   us_pwm_state_func_t uspwm_disable_func;
+  us_pwm_generic_func_t uspwm_set_duty_cycle_func;
+  us_pwm_generic_func_t uspwm_set_frequency_func;
 };
 
 struct us_pwm_attr_match_t *us_pwm_attr_match_new(enum us_pwm_attr_type_e type,
@@ -53,9 +55,7 @@ struct us_pwm_attr_match_t *us_pwm_attr_match_new(enum us_pwm_attr_type_e type,
                                                   const char *value);
 void us_pwm_attr_match_delete(struct us_pwm_attr_match_t *usp_attr_match);
 
-struct us_pwm_t *us_pwm_new(struct udev_device *device,
-                            us_pwm_state_func_t enable_func,
-                            us_pwm_state_func_t disable_func);
+struct us_pwm_t *us_pwm_new(struct udev_device *device);
 void us_pwm_delete(void *ctx);
 
 #endif /* USP_PWM_INTERNAL_H */
