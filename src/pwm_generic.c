@@ -123,11 +123,13 @@ us_pwm_disable(struct us_pwm_t *pwm)
  * @return A status code.
  */
 int
-us_pwn_set_duty_cycle(struct us_pwm_t *pwm, float duty_cycle)
+us_pwm_set_duty_cycle(struct us_pwm_t *pwm, float duty_cycle)
 {
   assert(pwm != NULL);
   assert(pwm->uspwm_set_duty_cycle_func != NULL);
 
+  if(duty_cycle < 0.0f || duty_cycle > 100.0f)
+    return USP_INVALID_RANGE;
   return pwm->uspwm_set_duty_cycle_func(pwm, duty_cycle);
 }
 
@@ -157,7 +159,7 @@ us_pwm_set_frequency(struct us_pwm_t *pwm, float frequency)
  * @return A status code.
  */
 int
-us_pwn_get_duty_cycle(struct us_pwm_t *pwm, float *out_duty_cycle)
+us_pwm_get_duty_cycle(struct us_pwm_t *pwm, float *out_duty_cycle)
 {
   assert(pwm != NULL);
   assert(out_duty_cycle != NULL);

@@ -54,6 +54,8 @@ struct us_pwm_t {
   us_pwm_set_float_func_t uspwm_set_frequency_func;
   us_pwm_get_float_func_t uspwm_get_duty_cycle_func;
   us_pwm_get_float_func_t uspwm_get_frequency_func;
+
+  void *uspwm_ctx;
 };
 
 struct us_pwm_attr_match_t *us_pwm_attr_match_new(enum us_pwm_attr_type_e type,

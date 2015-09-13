@@ -59,7 +59,7 @@ us_pwm_controller_delete(struct us_pwm_controller_t *ctrl)
  * not be copied, so please don't free them.
  *
  * @param type The type of the attribute to match.
- * @param key The attribute name (required).
+ * @param key The attribute name.
  * @param value The value of the attribute to match, or NULL if you
  * don't need to match specific values.
  *

@@ -1,6 +1,6 @@
 /**
  * @file test_ref.c
- * @brief 
+ * @brief
  * @author Travis Lane
  * @version 0.0.1
  * @date 2015-09-06
@@ -15,51 +15,51 @@ struct test_ref_t {
   int tr_should_free;
 };
 
-void 
+void
 ref_free(void *arg)
 {
-	struct test_ref_t *ref = arg;
+  struct test_ref_t *ref = arg;
 
   fail_if(ref->tr_should_free == 0, "ref freed, when I shouldn't have been.");
 }
 
-START_TEST (test_ref_sf)
+START_TEST(test_ref_sf)
 {
-	struct test_ref_t ref, *ref_ptr = &ref;
-	usp_ref_init(ref_ptr, ref_free);
-	ref.tr_should_free = 1;
+  struct test_ref_t ref, *ref_ptr = &ref;
+  usp_ref_init(ref_ptr, ref_free);
+  ref.tr_should_free = 1;
 
-	fail_if(ref.usp_ref_count != 0, "ref not initialized to zero.");
+  fail_if(ref.usp_ref_count != 0, "ref not initialized to zero.");
 
-	usp_ref(ref_ptr);
-	usp_ref(ref_ptr);
-	fail_if(ref.usp_ref_count != 2, "ref not incremented properly.");
-	
-	usp_unref(ref_ptr);
+  usp_ref(ref_ptr);
+  usp_ref(ref_ptr);
+  fail_if(ref.usp_ref_count != 2, "ref not incremented properly.");
+
+  usp_unref(ref_ptr);
   usp_unref(ref_ptr);
 
   fail_if(ref.usp_ref_count != 0, "ref not decremented properly.");
 }
 END_TEST
 
-START_TEST (test_ref_snf)
+START_TEST(test_ref_snf)
 {
-	struct test_ref_t ref, *ref_ptr = &ref;
-	usp_ref_init(ref_ptr, ref_free);
-	ref.tr_should_free = 0;
+  struct test_ref_t ref, *ref_ptr = &ref;
+  usp_ref_init(ref_ptr, ref_free);
+  ref.tr_should_free = 0;
 
-	fail_if(ref.usp_ref_count != 0, "ref not initialized to zero.");
+  fail_if(ref.usp_ref_count != 0, "ref not initialized to zero.");
 
-	usp_ref(ref_ptr);
-	usp_ref(ref_ptr);
-	fail_if(ref.usp_ref_count != 2, "ref not incremented properly.");
-	
-	usp_unref(ref_ptr);
-	fail_if(ref.usp_ref_count != 1, "ref not decremented properly.");
+  usp_ref(ref_ptr);
+  usp_ref(ref_ptr);
+  fail_if(ref.usp_ref_count != 2, "ref not incremented properly.");
+
+  usp_unref(ref_ptr);
+  fail_if(ref.usp_ref_count != 1, "ref not decremented properly.");
 }
 END_TEST
 
-Suite* 
+Suite *
 suite_ref_new()
 {
   Suite *suite_ref = suite_create("suite_ref");
@@ -72,8 +72,8 @@ suite_ref_new()
   return suite_ref;
 }
 
-int 
-main ()
+int
+main()
 {
   int failed;
   Suite *suite_ref = suite_ref_new();
