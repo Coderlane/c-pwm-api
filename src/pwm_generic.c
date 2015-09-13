@@ -128,7 +128,7 @@ us_pwm_set_duty_cycle(struct us_pwm_t *pwm, float duty_cycle)
   assert(pwm != NULL);
   assert(pwm->uspwm_set_duty_cycle_func != NULL);
 
-  if(duty_cycle < 0.0f || duty_cycle > 100.0f)
+  if (duty_cycle < 0.0f || duty_cycle > 100.0f)
     return USP_INVALID_RANGE;
   return pwm->uspwm_set_duty_cycle_func(pwm, duty_cycle);
 }
@@ -146,7 +146,8 @@ us_pwm_set_frequency(struct us_pwm_t *pwm, float frequency)
 {
   assert(pwm != NULL);
   assert(pwm->uspwm_set_frequency_func != NULL);
-
+  if (frequency < 0.0f)
+    return USP_INVALID_RANGE;
   return pwm->uspwm_set_duty_cycle_func(pwm, frequency);
 }
 
