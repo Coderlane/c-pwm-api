@@ -13,11 +13,15 @@
 
 #define INT_STR_LEN 12
 
+#define PWM_FOREACH_UNSAFE(list, entry) \
+  for (entry = list->uspl_head; entry != NULL; entry = entry->uspwm_next)
+
 struct udev;
 struct udev_device;
 
-struct us_pwm_attr_match_t;
 struct us_pwm_controller_t;
+struct us_pwm_list_t;
+struct us_pwm_list_entry_t;
 struct us_pwm_t;
 
 enum us_pwm_attr_type_e {
@@ -31,8 +35,8 @@ enum us_pwm_attr_type_e {
 enum us_pwm_state_e { USPWM_DISABLED = 0, USPWM_ENABLED = 1 };
 
 typedef int (*us_pwm_state_func_t)(struct us_pwm_t *, enum us_pwm_state_e);
-typedef int (*us_pwm_set_float_func_t)(struct us_pwm_t*, float);
-typedef int (*us_pwm_get_float_func_t)(struct us_pwm_t*, float *);
+typedef int (*us_pwm_set_float_func_t)(struct us_pwm_t *, float);
+typedef int (*us_pwm_get_float_func_t)(struct us_pwm_t *, float *);
 typedef int (*us_pwm_generic_func_t)(struct us_pwm_t *, void *);
 
 struct us_pwm_attr_match_t {
@@ -42,7 +46,15 @@ struct us_pwm_attr_match_t {
 };
 
 struct us_pwm_controller_t {
+  USP_REF_PRIVATE
   struct udev *uspc_udev;
+};
+
+struct us_pwm_list_t {
+  USP_REF_PRIVATE
+  struct us_pwm_t *uspl_head;
+  struct us_pwm_controller_t *uspl_ctrl;
+  uint32_t uspl_count;
 };
 
 struct us_pwm_t {
@@ -56,14 +68,15 @@ struct us_pwm_t {
   us_pwm_get_float_func_t uspwm_get_frequency_func;
 
   void *uspwm_ctx;
+  struct us_pwm_t *uspwm_next;
 };
-
-struct us_pwm_attr_match_t *us_pwm_attr_match_new(enum us_pwm_attr_type_e type,
-                                                  const char *key,
-                                                  const char *value);
-void us_pwm_attr_match_delete(struct us_pwm_attr_match_t *usp_attr_match);
 
 struct us_pwm_t *us_pwm_new(struct udev_device *device);
 void us_pwm_delete(void *ctx);
+
+struct us_pwm_list_t *us_pwm_list_new(struct us_pwm_controller_t *ctrl);
+void us_pwm_list_delete(void *ctx);
+int us_pwm_list_search(struct us_pwm_list_t *list, const char *key,
+                       const char *value);
 
 #endif /* USP_PWM_INTERNAL_H */

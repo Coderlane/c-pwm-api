@@ -20,14 +20,15 @@ typedef void (*usp_ref_delete_t)(void *);
   usp_ref_delete_t usp_ref_delete;
 
 /**
- * @brief Initialize a new reference counting object.
+ * @brief Initialize a new reference counting object. Gives the ref
+ * one starting reference.
  *
  * @param ref The reference counting object to initialize.
  * @param ref_delete The function used to delete the reference counter.
  */
 #define usp_ref_init(ref, ref_delete) \
   assert(ref != NULL);                \
-  ref->usp_ref_count = 0;             \
+  ref->usp_ref_count = 1;             \
   ref->usp_ref_delete = ref_delete;
 
 /**

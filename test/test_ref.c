@@ -29,15 +29,13 @@ START_TEST(test_ref_sf)
   usp_ref_init(ref_ptr, ref_free);
   ref.tr_should_free = 1;
 
-  fail_if(ref.usp_ref_count != 0, "ref not initialized to zero.");
+  fail_if(ref.usp_ref_count != 1, "ref not initialized to one.");
 
-  usp_ref(ref_ptr);
   usp_ref(ref_ptr);
   fail_if(ref.usp_ref_count != 2, "ref not incremented properly.");
 
   usp_unref(ref_ptr);
   usp_unref(ref_ptr);
-
   fail_if(ref.usp_ref_count != 0, "ref not decremented properly.");
 }
 END_TEST
@@ -48,9 +46,8 @@ START_TEST(test_ref_snf)
   usp_ref_init(ref_ptr, ref_free);
   ref.tr_should_free = 0;
 
-  fail_if(ref.usp_ref_count != 0, "ref not initialized to zero.");
+  fail_if(ref.usp_ref_count != 1, "ref not initialized to one.");
 
-  usp_ref(ref_ptr);
   usp_ref(ref_ptr);
   fail_if(ref.usp_ref_count != 2, "ref not incremented properly.");
 
