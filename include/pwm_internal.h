@@ -74,9 +74,8 @@ struct us_pwm_t {
 struct us_pwm_t *us_pwm_new(struct udev_device *device);
 void us_pwm_delete(void *ctx);
 
-struct us_pwm_list_t *us_pwm_list_new(struct us_pwm_controller_t *ctrl);
+struct us_pwm_list_t *us_pwm_list_new();
 void us_pwm_list_delete(void *ctx);
-int us_pwm_list_search(struct us_pwm_list_t *list, const char *key,
-                       const char *value);
+int us_pwm_list_add(struct us_pwm_list_t *list, struct us_pwm_t *pwm);
 
 #endif /* USP_PWM_INTERNAL_H */

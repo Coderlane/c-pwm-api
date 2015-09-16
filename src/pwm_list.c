@@ -17,16 +17,25 @@
 #include "pwm_internal.h"
 #include "pwm.h"
 
+/**
+ * @brief Create a new list to hold pwms.
+ *
+ * @return A new empty list to hold pwms.
+ */
 struct us_pwm_list_t *
-us_pwm_list_new(struct us_pwm_controller_t *ctrl)
+us_pwm_list_new()
 {
   struct us_pwm_list_t *list = NULL;
   list = calloc(sizeof(struct us_pwm_list_t), 1);
   usp_ref_init(list, us_pwm_list_delete);
-  list->uspl_ctrl = ctrl;
   return list;
 }
 
+/**
+ * @brief Destroy the list of pwms.
+ *
+ * @param ctx The list of pwms to delete.
+ */
 void
 us_pwm_list_delete(void *ctx)
 {
@@ -35,4 +44,30 @@ us_pwm_list_delete(void *ctx)
   PWM_FOREACH_UNSAFE(list, pwm) { us_pwm_unref(pwm); }
   list->uspl_count = 0;
   free(list);
+}
+
+/**
+ * @brief Add a pwm to a list of pwms. Note: a pwm can only belong
+ * to one list of pwms.
+ *
+ * @param list The list of pwms to add the pwm to.
+ * @param pwm The pwm to add to the list of pwms.
+ *
+ * @return A status code.
+ */
+int
+us_pwm_list_add(struct us_pwm_list_t *list, struct us_pwm_t *pwm)
+{
+  assert(list != NULL);
+  assert(pwm != NULL);
+  assert(pwm->uspwm_next == NULL);
+  usp_ref(pwm);
+
+  if(list->uspl_head != NULL) {
+    pwm->uspwm_next = list->uspl_head;
+  }
+
+  list->uspl_head = pwm;
+
+  return USP_OK;
 }
