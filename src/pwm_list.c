@@ -32,7 +32,9 @@ us_pwm_list_new()
 }
 
 /**
- * @brief Destroy the list of pwms.
+ * @brief Destroy the list of pwms. This simply decrements the refcount on
+ * each of the items in the list by one. If something ref'd a pwm it will
+ * still prevent the pwm from being free'd until its refcount goes to 0.
  *
  * @param ctx The list of pwms to delete.
  */
@@ -70,4 +72,26 @@ us_pwm_list_add(struct us_pwm_list_t *list, struct us_pwm_t *pwm)
   list->uspl_head = pwm;
 
   return USP_OK;
+}
+
+/**
+ * @brief Take a reference to a list of PWMs.
+ *
+ * @param list The list of pwms to take a reference to.
+ */
+void
+us_pwm_list_ref(struct us_pwm_list_t *list)
+{
+  usp_ref(list);
+}
+
+/**
+ * @brief Release a reference to a list of PWMs.
+ *
+ * @param list The list of pwms to release a reference to.
+ */
+void
+us_pwm_list_unref(struct us_pwm_list_t *list)
+{
+  usp_unref(list);
 }
