@@ -42,8 +42,8 @@ void
 us_pwm_list_delete(void *ctx)
 {
   struct us_pwm_list_t *list = ctx;
-  struct us_pwm_t *pwm;
-  PWM_FOREACH_UNSAFE(list, pwm) { us_pwm_unref(pwm); }
+  struct us_pwm_list_entry_t *entry;
+  us_pwm_list_foreach(list, entry) { us_pwm_unref(entry->uspl_pwm); }
   list->uspl_count = 0;
   free(list);
 }
@@ -60,16 +60,20 @@ us_pwm_list_delete(void *ctx)
 int
 us_pwm_list_add(struct us_pwm_list_t *list, struct us_pwm_t *pwm)
 {
+  struct us_pwm_list_entry_t *list_entry = NULL;
   assert(list != NULL);
   assert(pwm != NULL);
   assert(pwm->uspwm_next == NULL);
+
+  list_entry = malloc(sizeof(struct us_pwm_list_entry_t));
+  list_entry->uspl_pwm = pwm;
   usp_ref(pwm);
 
   if(list->uspl_head != NULL) {
-    pwm->uspwm_next = list->uspl_head;
+    list_entry->uspl_next = list->uspl_head;
   }
 
-  list->uspl_head = pwm;
+  list->uspl_head = list_entry;
 
   return USP_OK;
 }

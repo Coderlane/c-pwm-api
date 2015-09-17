@@ -11,11 +11,6 @@
 
 #include "ref_internal.h"
 
-#define INT_STR_LEN 12
-
-#define PWM_FOREACH_UNSAFE(list, entry) \
-  for (entry = list->uspl_head; entry != NULL; entry = entry->uspwm_next)
-
 struct udev;
 struct udev_device;
 
@@ -24,13 +19,18 @@ struct us_pwm_list_t;
 struct us_pwm_list_entry_t;
 struct us_pwm_t;
 
-enum us_pwm_attr_type_e {
-  USPAT_SUBSYSTEM,
-  USPAT_SYSATTR,
-  USPAT_PROPERTY,
-  USPAT_TAG,
-  USPAT_SYSNAME
+/**
+ * Controller
+ */
+
+struct us_pwm_controller_t {
+  USP_REF_PRIVATE
+  struct udev *uspc_udev;
 };
+
+/**
+ * PWM
+ */
 
 enum us_pwm_state_e { USPWM_DISABLED = 0, USPWM_ENABLED = 1 };
 
@@ -38,24 +38,6 @@ typedef int (*us_pwm_state_func_t)(struct us_pwm_t *, enum us_pwm_state_e);
 typedef int (*us_pwm_set_float_func_t)(struct us_pwm_t *, float);
 typedef int (*us_pwm_get_float_func_t)(struct us_pwm_t *, float *);
 typedef int (*us_pwm_generic_func_t)(struct us_pwm_t *, void *);
-
-struct us_pwm_attr_match_t {
-  enum us_pwm_attr_type_e uspam_type;
-  const char *uspam_key;
-  const char *uspam_value;
-};
-
-struct us_pwm_controller_t {
-  USP_REF_PRIVATE
-  struct udev *uspc_udev;
-};
-
-struct us_pwm_list_t {
-  USP_REF_PRIVATE
-  struct us_pwm_t *uspl_head;
-  struct us_pwm_controller_t *uspl_ctrl;
-  uint32_t uspl_count;
-};
 
 struct us_pwm_t {
   USP_REF_PRIVATE
@@ -77,6 +59,22 @@ void us_pwm_delete(void *ctx);
 /**
  * List
  */
+
+#define us_pwm_list_foreach(list, entry) \
+  for (entry = list->uspl_head; entry != NULL; entry = entry->uspl_next)
+
+struct us_pwm_list_t {
+  USP_REF_PRIVATE
+  struct us_pwm_list_entry_t *uspl_head;
+  struct us_pwm_controller_t *uspl_ctrl;
+  uint32_t uspl_count;
+};
+
+struct us_pwm_list_entry_t {
+  struct us_pwm_list_entry_t *uspl_next;
+  struct us_pwm_t *uspl_pwm;
+};
+
 struct us_pwm_list_t *us_pwm_list_new();
 void us_pwm_list_delete(void *ctx);
 int us_pwm_list_add(struct us_pwm_list_t *list, struct us_pwm_t *pwm);
