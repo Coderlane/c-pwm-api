@@ -60,9 +60,6 @@ void us_pwm_delete(void *ctx);
  * List
  */
 
-#define us_pwm_list_foreach(list, entry) \
-  for (entry = list->uspl_head; entry != NULL; entry = entry->uspl_next)
-
 struct us_pwm_list_t {
   USP_REF_PRIVATE
   struct us_pwm_list_entry_t *uspl_head;
@@ -78,7 +75,5 @@ struct us_pwm_list_entry_t {
 struct us_pwm_list_t *us_pwm_list_new();
 void us_pwm_list_delete(void *ctx);
 int us_pwm_list_add(struct us_pwm_list_t *list, struct us_pwm_t *pwm);
-void us_pwm_list_ref(struct us_pwm_list_t *list);
-void us_pwm_list_ref(struct us_pwm_list_t *list);
 
 #endif /* USP_PWM_INTERNAL_H */

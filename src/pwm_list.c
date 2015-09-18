@@ -79,6 +79,32 @@ us_pwm_list_add(struct us_pwm_list_t *list, struct us_pwm_t *pwm)
 }
 
 /**
+ * @brief Get the head of the list.
+ *
+ * @param list The list to get the head of.
+ *
+ * @return The head of the list, may be NULL.
+ */
+struct us_pwm_list_entry_t *
+us_pwm_list_head(struct us_pwm_list_t *list)
+{
+  return list->uspl_head;
+}
+
+/**
+ * @brief Get the next entry according to a list entry.
+ *
+ * @param entry The list entry to get the next entry of.
+ *
+ * @return The next entry in the list, NULL if we are at the end.
+ */
+struct us_pwm_list_entry_t *
+us_pwm_list_entry_next(struct us_pwm_list_entry_t *entry)
+{
+  return entry->uspl_next;
+}
+
+/**
  * @brief Take a reference to a list of PWMs.
  *
  * @param list The list of pwms to take a reference to.

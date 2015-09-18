@@ -49,4 +49,18 @@ int us_pwm_get_duty_cycle(struct us_pwm_t *pwm, float *out_duty_cycle);
 int us_pwm_get_frequency(struct us_pwm_t *pwm, float *out_frequency);
 // int us_pwm_get_polarity(struct us_pwm_t *pwm, float *out_polarity);
 
+/**
+ * List Public
+ */
+
+#define us_pwm_list_foreach(list, entry)              \
+  for (entry = us_pwm_list_head(list); entry != NULL; \
+       entry = us_pwm_list_entry_next(entry))
+
+void us_pwm_list_ref(struct us_pwm_list_t *list);
+void us_pwm_list_ref(struct us_pwm_list_t *list);
+struct us_pwm_list_entry_t *
+us_pwm_list_entry_next(struct us_pwm_list_entry_t *entry);
+struct us_pwm_list_entry_t *us_pwm_list_head(struct us_pwm_list_t *list);
+
 #endif /* USP_PWM_H */
