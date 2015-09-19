@@ -63,7 +63,6 @@ us_pwm_list_add(struct us_pwm_list_t *list, struct us_pwm_t *pwm)
   struct us_pwm_list_entry_t *list_entry = NULL;
   assert(list != NULL);
   assert(pwm != NULL);
-  assert(pwm->uspwm_next == NULL);
 
   list_entry = malloc(sizeof(struct us_pwm_list_entry_t));
   list_entry->uspl_pwm = pwm;

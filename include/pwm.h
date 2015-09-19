@@ -58,7 +58,7 @@ int us_pwm_get_frequency(struct us_pwm_t *pwm, float *out_frequency);
        entry = us_pwm_list_entry_next(entry))
 
 void us_pwm_list_ref(struct us_pwm_list_t *list);
-void us_pwm_list_ref(struct us_pwm_list_t *list);
+void us_pwm_list_unref(struct us_pwm_list_t *list);
 struct us_pwm_list_entry_t *
 us_pwm_list_entry_next(struct us_pwm_list_entry_t *entry);
 struct us_pwm_list_entry_t *us_pwm_list_head(struct us_pwm_list_t *list);
