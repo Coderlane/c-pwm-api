@@ -14,7 +14,18 @@
 struct us_pwm_test_t {
   const char *uspt_id;
   int uspt_should_free;
+  int uspt_freed;
 };
+
+void
+pwm_test_init(struct us_pwm_test_t *pwm_test, struct us_pwm_t *pwm,
+              const char *id, int should_free)
+{
+  pwm->uspwm_ctx = pwm_test;
+  pwm_test->uspt_id = id;
+  pwm_test->uspt_should_free = should_free;
+  pwm_test->uspt_freed = 0;
+}
 
 void
 pwm_free(void *arg)
@@ -22,6 +33,8 @@ pwm_free(void *arg)
   struct us_pwm_t *pwm = arg;
   struct us_pwm_test_t *pwm_test = pwm->uspwm_ctx;
 
+  fail_if(pwm_test->uspt_freed == 1, "pwm_test already freed.");
+  pwm_test->uspt_freed = 1;
   fail_if(pwm_test->uspt_should_free == 0,
           "ref freed, when I shouldn't have been.");
 }
@@ -29,14 +42,37 @@ pwm_free(void *arg)
 START_TEST(test_list_order)
 {
   struct us_pwm_t pwm_a, pwm_b, pwm_c;
+  struct us_pwm_test_t pwm_test_a, pwm_test_b, pwm_test_c;
   struct us_pwm_list_t *list;
   list = us_pwm_list_new();
+
+  fail_if(list->usp_ref_count != 1, "list ref_count not expected value.");
+
+  pwm_test_init(&pwm_test_a, &pwm_a, "test_a", 1);
+  pwm_test_init(&pwm_test_b, &pwm_b, "test_b", 1);
+  pwm_test_init(&pwm_test_c, &pwm_c, "test_c", 1);
+
   usp_ref_init(&pwm_a, pwm_free);
   usp_ref_init(&pwm_b, pwm_free);
   usp_ref_init(&pwm_c, pwm_free);
 
+  us_pwm_list_add(list, &pwm_a);
+  fail_if(pwm_a.usp_ref_count != 2, "pwm_a ref_count not expected value.");
+  us_pwm_list_add(list, &pwm_b);
+  us_pwm_list_add(list, &pwm_c);
+
+  us_pwm_unref(&pwm_a);
+  us_pwm_unref(&pwm_b);
+  us_pwm_unref(&pwm_c);
 
   us_pwm_list_unref(list);
+  fail_if(list->usp_ref_count != 0, "list ref_count not expected value.");
+  fail_if(pwm_a.usp_ref_count != 0, "pwm_a ref_count not expected value.");
+
+
+  fail_if(pwm_test_a.uspt_freed == 0, "pwm_test_a not freed.");
+  fail_if(pwm_test_b.uspt_freed == 0, "pwm_test_b not freed.");
+  fail_if(pwm_test_c.uspt_freed == 0, "pwm_test_c not freed.");
 }
 END_TEST
 
