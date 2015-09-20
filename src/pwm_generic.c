@@ -32,9 +32,8 @@ us_pwm_new(struct udev_device *device)
   pwm = calloc(sizeof(struct us_pwm_t), 1);
   assert(pwm != NULL);
 
-  pwm->uspwm_device = device;
-
   udev_device_ref(pwm->uspwm_device);
+  pwm->uspwm_device = device;
   usp_ref_init(pwm, us_pwm_delete);
 
   return pwm;

@@ -94,6 +94,7 @@ START_TEST(test_pwm_set_get_duty_cycle_valid)
   fail_if(duty_cycle != 100.0f, "Duty cycle not expected value.");
 
   us_pwm_unref(pwm);
+  exit(-1);
 }
 END_TEST
 

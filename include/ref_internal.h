@@ -9,6 +9,7 @@
 #ifndef USP_REF_INTERNAL_H
 #define USP_REF_INTERNAL_H
 
+#include <stdio.h>
 #include <assert.h>
 #include <stdatomic.h>
 #include <stdint.h>
@@ -27,7 +28,7 @@ typedef void (*usp_ref_delete_t)(void *);
  * @param ref_delete The function used to delete the reference counter.
  */
 #define usp_ref_init(ref, ref_delete) \
-  (ref)->usp_ref_count = 1;           \
+  (ref)->usp_ref_count = 0;           \
   (ref)->usp_ref_delete = ref_delete;
 
 /**
@@ -35,8 +36,7 @@ typedef void (*usp_ref_delete_t)(void *);
  *
  * @param ref The object to reference.
  */
-#define usp_ref(ref)                          \
-  atomic_fetch_add(&(ref->usp_ref_count), 1);
+#define usp_ref(ref) atomic_fetch_add(&(ref->usp_ref_count), 1);
 
 /**
  * @brief Decrement the reference on a reference counted object.
@@ -44,8 +44,11 @@ typedef void (*usp_ref_delete_t)(void *);
  * @param ref The object to unreference. If there are no reference
  * holders, the object is destroyed.
  */
-#define usp_unref(ref)                                   \
-  if (atomic_fetch_sub(&((ref)->usp_ref_count), 1) == 0) \
-    (ref)->usp_ref_delete((ref));
+#define usp_unref(ref)                                     \
+  printf("ref: %d\n", (ref)->usp_ref_count);               \
+  if (atomic_fetch_sub(&((ref)->usp_ref_count), 1) == 1) { \
+    printf("del\n");                                       \
+    (ref)->usp_ref_delete((ref));                          \
+  }
 
 #endif /* USP_REF_INTERNAL_H */
