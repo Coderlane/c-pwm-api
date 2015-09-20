@@ -28,7 +28,6 @@ struct us_pwm_t *
 us_pwm_new(struct udev_device *device)
 {
   struct us_pwm_t *pwm = NULL;
-  assert(device != NULL);
 
   pwm = calloc(sizeof(struct us_pwm_t), 1);
   assert(pwm != NULL);
@@ -91,9 +90,6 @@ us_pwm_unref(struct us_pwm_t *pwm)
 int
 us_pwm_enable(struct us_pwm_t *pwm)
 {
-  assert(pwm != NULL);
-  assert(pwm->uspwm_enable_func != NULL);
-
   return pwm->uspwm_enable_func(pwm, USPWM_ENABLED);
 }
 
@@ -108,9 +104,6 @@ us_pwm_enable(struct us_pwm_t *pwm)
 int
 us_pwm_disable(struct us_pwm_t *pwm)
 {
-  assert(pwm != NULL);
-  assert(pwm->uspwm_disable_func != NULL);
-
   return pwm->uspwm_disable_func(pwm, USPWM_DISABLED);
 }
 
@@ -125,9 +118,6 @@ us_pwm_disable(struct us_pwm_t *pwm)
 int
 us_pwm_set_duty_cycle(struct us_pwm_t *pwm, float duty_cycle)
 {
-  assert(pwm != NULL);
-  assert(pwm->uspwm_set_duty_cycle_func != NULL);
-
   if (duty_cycle < 0.0f || duty_cycle > 100.0f)
     return USP_INVALID_RANGE;
   return pwm->uspwm_set_duty_cycle_func(pwm, duty_cycle);
@@ -144,8 +134,6 @@ us_pwm_set_duty_cycle(struct us_pwm_t *pwm, float duty_cycle)
 int
 us_pwm_set_frequency(struct us_pwm_t *pwm, float frequency)
 {
-  assert(pwm != NULL);
-  assert(pwm->uspwm_set_frequency_func != NULL);
   if (frequency < 0.0f)
     return USP_INVALID_RANGE;
   return pwm->uspwm_set_duty_cycle_func(pwm, frequency);
@@ -162,10 +150,7 @@ us_pwm_set_frequency(struct us_pwm_t *pwm, float frequency)
 int
 us_pwm_get_duty_cycle(struct us_pwm_t *pwm, float *out_duty_cycle)
 {
-  assert(pwm != NULL);
   assert(out_duty_cycle != NULL);
-  assert(pwm->uspwm_get_duty_cycle_func != NULL);
-
   return pwm->uspwm_get_duty_cycle_func(pwm, out_duty_cycle);
 }
 
@@ -180,9 +165,6 @@ us_pwm_get_duty_cycle(struct us_pwm_t *pwm, float *out_duty_cycle)
 int
 us_pwm_get_frequency(struct us_pwm_t *pwm, float *out_frequency)
 {
-  assert(pwm != NULL);
   assert(out_frequency != NULL);
-  assert(pwm->uspwm_get_frequency_func != NULL);
-
   return pwm->uspwm_get_duty_cycle_func(pwm, out_frequency);
 }
