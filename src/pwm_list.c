@@ -43,8 +43,7 @@ us_pwm_list_delete(void *ctx)
 {
   struct us_pwm_list_t *list = ctx;
   struct us_pwm_list_entry_t *entry;
-  printf("deleting list\n");
-  us_pwm_list_foreach(list, entry) { printf("%x\n", entry); us_pwm_unref(entry->uspl_pwm); }
+  us_pwm_list_foreach(list, entry) { us_pwm_unref(entry->uspl_pwm); }
   list->uspl_count = 0;
   free(list);
 }
@@ -69,10 +68,11 @@ us_pwm_list_add(struct us_pwm_list_t *list, struct us_pwm_t *pwm)
   list_entry->uspl_pwm = pwm;
   usp_ref(pwm);
 
+  list->uspl_count++;
+
   if(list->uspl_head != NULL) {
     list_entry->uspl_next = list->uspl_head;
   }
-
   list->uspl_head = list_entry;
 
   return USP_OK;

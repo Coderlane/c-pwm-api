@@ -69,7 +69,6 @@ START_TEST(test_list_order)
   fail_if(list->usp_ref_count != 0, "list ref_count not expected value.");
   fail_if(pwm_a.usp_ref_count != 0, "pwm_a ref_count not expected value.");
 
-
   fail_if(pwm_test_a.uspt_freed == 0, "pwm_test_a not freed.");
   fail_if(pwm_test_b.uspt_freed == 0, "pwm_test_b not freed.");
   fail_if(pwm_test_c.uspt_freed == 0, "pwm_test_c not freed.");
@@ -82,13 +81,13 @@ END_TEST
 Suite *
 suite_ref_new()
 {
-  Suite *suite_ref = suite_create("suite_ref");
-  TCase *case_ref_sf = tcase_create("test_ref_should_free");
-  TCase *case_ref_snf = tcase_create("test_ref_should_not_free");
-  tcase_add_test(case_ref_sf, test_list_order);
-  tcase_add_test(case_ref_snf, test_list_post_unref_ref);
-  suite_add_tcase(suite_ref, case_ref_sf);
-  suite_add_tcase(suite_ref, case_ref_snf);
+  Suite *suite_ref = suite_create("suite_list");
+  TCase *case_list_order = tcase_create("case_list_order");
+  TCase *case_list_ref = tcase_create("case_list_ref");
+  tcase_add_test(case_list_order, test_list_order);
+  tcase_add_test(case_list_ref, test_list_post_unref_ref);
+  suite_add_tcase(suite_ref, case_list_ref);
+  suite_add_tcase(suite_ref, case_list_order);
   return suite_ref;
 }
 
