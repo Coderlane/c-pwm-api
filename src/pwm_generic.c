@@ -51,7 +51,8 @@ us_pwm_delete(void *ctx)
   assert(pwm != NULL);
   assert(pwm->usp_ref_count == 0);
 
-  udev_device_unref(pwm->uspwm_device);
+  if (pwm->uspwm_device != NULL)
+    udev_device_unref(pwm->uspwm_device);
   free(pwm);
 }
 

@@ -66,7 +66,7 @@ START_TEST(test_pwm_set_get_duty_cycle_valid)
   float duty_cycle;
   struct us_pwm_t *pwm;
   struct us_pwm_test_t pwm_test;
-  pwm = us_pwm_new((struct udev_device *)&pwm);
+  pwm = us_pwm_new(NULL);
   uspt_init(pwm, &pwm_test);
 
   rv = us_pwm_set_duty_cycle(pwm, 0.0f);
@@ -94,7 +94,6 @@ START_TEST(test_pwm_set_get_duty_cycle_valid)
   fail_if(duty_cycle != 100.0f, "Duty cycle not expected value.");
 
   us_pwm_unref(pwm);
-  exit(-1);
 }
 END_TEST
 
@@ -104,7 +103,7 @@ START_TEST(test_pwm_set_get_duty_cycle_invalid)
   float duty_cycle;
   struct us_pwm_t *pwm;
   struct us_pwm_test_t pwm_test;
-  pwm = us_pwm_new((struct udev_device *)&pwm);
+  pwm = us_pwm_new(NULL);
   uspt_init(pwm, &pwm_test);
 
   rv = us_pwm_set_duty_cycle(pwm, 100.0f);
@@ -132,7 +131,7 @@ START_TEST(test_pwm_set_get_frequency_valid)
   float frequency;
   struct us_pwm_t *pwm;
   struct us_pwm_test_t pwm_test;
-  pwm = us_pwm_new((struct udev_device *)&pwm);
+  pwm = us_pwm_new(NULL);
   uspt_init(pwm, &pwm_test);
 
   rv = us_pwm_set_frequency(pwm, 0.0f);
@@ -169,7 +168,7 @@ START_TEST(test_pwm_set_get_frequency_invalid)
   float frequency;
   struct us_pwm_t *pwm;
   struct us_pwm_test_t pwm_test;
-  pwm = us_pwm_new((struct udev_device *)&pwm);
+  pwm = us_pwm_new(NULL);
   uspt_init(pwm, &pwm_test);
 
   rv = us_pwm_set_frequency(pwm, 100.0f);
