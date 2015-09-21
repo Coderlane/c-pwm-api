@@ -42,9 +42,11 @@ void
 us_pwm_list_delete(void *ctx)
 {
   struct us_pwm_list_t *list = ctx;
-  struct us_pwm_list_entry_t *entry;
-  us_pwm_list_foreach(list, entry) { us_pwm_unref(entry->uspl_pwm); }
-  list->uspl_count = 0;
+  struct us_pwm_list_entry_t *entry, *next;
+  us_pwm_list_foreach_safe(list, entry, next) {
+    us_pwm_unref(entry->uspl_pwm);
+    free(entry);
+  }
   free(list);
 }
 
@@ -101,7 +103,7 @@ us_pwm_list_head(struct us_pwm_list_t *list)
 struct us_pwm_list_entry_t *
 us_pwm_list_entry_next(struct us_pwm_list_entry_t *entry)
 {
-  return entry->uspl_next;
+  return entry == NULL ? NULL : entry->uspl_next;
 }
 
 /**

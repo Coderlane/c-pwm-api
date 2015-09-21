@@ -57,7 +57,6 @@ uspt_init(struct us_pwm_t *pwm, struct us_pwm_test_t *pwm_test)
   pwm->uspwm_get_duty_cycle_func = uspt_get_duty_cycle;
   pwm->uspwm_set_frequency_func = uspt_set_frequency;
   pwm->uspwm_get_frequency_func = uspt_get_frequency;
-  us_pwm_ref(pwm);
 }
 
 START_TEST(test_pwm_set_get_duty_cycle_valid)
