@@ -26,7 +26,10 @@ struct us_pwm_list_t *
 us_pwm_list_new()
 {
   struct us_pwm_list_t *list = NULL;
-  list = calloc(sizeof(struct us_pwm_list_t), 1);
+  list = malloc(sizeof(struct us_pwm_list_t));
+  list->uspl_count = 0;
+  list->uspl_ctrl = NULL;
+  list->uspl_head = NULL;
   usp_ref_init(list, us_pwm_list_delete);
   return list;
 }
@@ -72,11 +75,8 @@ us_pwm_list_add(struct us_pwm_list_t *list, struct us_pwm_t *pwm)
 
   list->uspl_count++;
 
-  if(list->uspl_head != NULL) {
-    list_entry->uspl_next = list->uspl_head;
-  }
+  list_entry->uspl_next = list->uspl_head;
   list->uspl_head = list_entry;
-
   return USP_OK;
 }
 
