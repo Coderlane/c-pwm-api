@@ -33,6 +33,7 @@ struct us_pwm_controller_t {
  */
 
 enum us_pwm_state_e { USPWM_DISABLED = 0, USPWM_ENABLED = 1 };
+enum us_pwm_type_e { USPWM_ODC1, USPWM_TEST };
 
 typedef int (*us_pwm_state_func_t)(struct us_pwm_t *, enum us_pwm_state_e);
 typedef int (*us_pwm_set_float_func_t)(struct us_pwm_t *, float);
@@ -41,7 +42,9 @@ typedef int (*us_pwm_generic_func_t)(struct us_pwm_t *, void *);
 
 struct us_pwm_t {
   USP_REF_PRIVATE
+
   struct udev_device *uspwm_device;
+
   us_pwm_state_func_t uspwm_enable_func;
   us_pwm_state_func_t uspwm_disable_func;
   us_pwm_set_float_func_t uspwm_set_duty_cycle_func;
@@ -49,11 +52,13 @@ struct us_pwm_t {
   us_pwm_get_float_func_t uspwm_get_duty_cycle_func;
   us_pwm_get_float_func_t uspwm_get_frequency_func;
 
+  enum us_pwm_type_e uspwm_type;
   void *uspwm_ctx;
   struct us_pwm_t *uspwm_next;
 };
 
-struct us_pwm_t *us_pwm_new(struct udev_device *device);
+struct us_pwm_t *us_pwm_new(struct udev_device *device,
+                            enum us_pwm_type_e type);
 void us_pwm_delete(void *ctx);
 
 /**

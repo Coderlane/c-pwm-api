@@ -25,7 +25,7 @@
  * @return
  */
 struct us_pwm_t *
-us_pwm_new(struct udev_device *device)
+us_pwm_new(struct udev_device *device, enum us_pwm_type_e type)
 {
   struct us_pwm_t *pwm = NULL;
 
@@ -34,6 +34,7 @@ us_pwm_new(struct udev_device *device)
 
   udev_device_ref(pwm->uspwm_device);
   pwm->uspwm_device = device;
+  pwm->uspwm_type = type;
   usp_ref_init(pwm, us_pwm_delete);
 
   return pwm;
