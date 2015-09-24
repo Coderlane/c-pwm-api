@@ -91,7 +91,7 @@ us_pwm_unref(struct us_pwm_t *pwm)
 int
 us_pwm_enable(struct us_pwm_t *pwm)
 {
-  return pwm->uspwm_enable_func(pwm, USPWM_ENABLED);
+  return pwm->uspwm_enable_func(pwm);
 }
 
 /**
@@ -105,7 +105,7 @@ us_pwm_enable(struct us_pwm_t *pwm)
 int
 us_pwm_disable(struct us_pwm_t *pwm)
 {
-  return pwm->uspwm_disable_func(pwm, USPWM_DISABLED);
+  return pwm->uspwm_disable_func(pwm);
 }
 
 /**

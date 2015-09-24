@@ -17,6 +17,8 @@ struct us_pwm_t;
 
 enum us_pwm_error_e {
   USP_NOT_IMPLEMENTED = -64,
+  USP_FILE_ERROR = -5,
+  USP_IO_ERROR = -4,
   USP_INVALID_RANGE = -3,
   USP_INVALID_STATE = -2,
   USP_GENERIC_ERROR = -1,

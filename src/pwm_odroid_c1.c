@@ -39,10 +39,9 @@ struct us_pwm_odroid_c1_t odc1_one = {
 };
 
 int
-odc1_enable(struct us_pwm_t *pwm, enum us_pwm_state_e state)
+odc1_enable(struct us_pwm_t *pwm)
 {
   struct us_pwm_odroid_c1_t *odc1_pwm;
-  assert(state == USPWM_ENABLED);
   assert(pwm->uspwm_type == USPWM_ODC1);
   odc1_pwm = pwm->uspwm_ctx;
 
@@ -50,10 +49,9 @@ odc1_enable(struct us_pwm_t *pwm, enum us_pwm_state_e state)
 }
 
 int
-odc1_disable(struct us_pwm_t *pwm, enum us_pwm_state_e state)
+odc1_disable(struct us_pwm_t *pwm)
 {
   struct us_pwm_odroid_c1_t *odc1_pwm;
-  assert(state == USPWM_DISABLED);
   assert(pwm->uspwm_type == USPWM_ODC1);
   odc1_pwm = pwm->uspwm_ctx;
 
