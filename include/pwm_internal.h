@@ -81,4 +81,14 @@ struct us_pwm_list_t *us_pwm_list_new();
 void us_pwm_list_delete(void *ctx);
 int us_pwm_list_add(struct us_pwm_list_t *list, struct us_pwm_t *pwm);
 
+/**
+ * sysfs
+ */
+int sysfs_read_attr_str(const char *path, char *buff, size_t buff_size,
+                        ssize_t *out_len);
+int sysfs_write_attr_str(const char *path, char *buff, size_t buff_len,
+                         ssize_t *out_len);
+int sysfs_read_attr_int(const char *path, int *data);
+int sysfs_write_attr_int(const char *path, int data);
+
 #endif /* USP_PWM_INTERNAL_H */

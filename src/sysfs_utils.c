@@ -26,15 +26,15 @@
  * @brief Read a value from a sysfs attribute into a buffer.
  *
  * @param path The path to the sysfs attribute to read.
+ * @param buff A buffer to read data into.
  * @param buff_size The size of the buffer provided.
- * @param out_buff A buffer to read data into.
  * @param out_len The length of data actually read.
  *
  * @return A status code
  */
 int
-sysfs_read_attr_str(const char *path, size_t buff_size,
-                    char *out_buff, ssize_t *out_len)
+sysfs_read_attr_str(const char *path, char *buff, size_t buff_size,
+                    ssize_t *out_len)
 {
   int fd, result;
   ssize_t result_len;
@@ -45,7 +45,7 @@ sysfs_read_attr_str(const char *path, size_t buff_size,
     goto out;
   }
 
-  result_len = read(fd, out_buff, buff_size);
+  result_len = read(fd, buff, buff_size);
   if (result_len < 0) {
     result = USP_IO_ERROR;
     goto out;
@@ -72,7 +72,8 @@ out:
  * @return A status code.
  */
 int
-sysfs_write_attr_str(const char *path, char *data, size_t len, ssize_t *out_len)
+sysfs_write_attr_str(const char *path, char *buff, size_t buff_len,
+                     ssize_t *out_len)
 {
   int fd, result;
   ssize_t result_len;
@@ -85,7 +86,7 @@ sysfs_write_attr_str(const char *path, char *data, size_t len, ssize_t *out_len)
     goto out;
   }
 
-  result_len = write(fd, data, len);
+  result_len = write(fd, buff, buff_len);
   if (result_len < 0) {
     result = USP_IO_ERROR;
     goto out;
@@ -102,24 +103,48 @@ out:
 }
 
 /**
- * @brief 
+ * @brief Read a new integer value for a sysfs attribute from a file.
  *
- * @param path
- * @param data
+ * @param path The path to the sysfs attribute to read.
+ * @param data The data read.
  *
- * @return 
+ * @return A status code.
  */
 int
 sysfs_read_attr_int(const char *path, int *data)
 {
   int rc;
-  ssize_t buff_len;
+  ssize_t read_len;
   char buff[INT_BUFFER_SIZE];
 
-  rc = sysfs_read_attr_str(path, INT_BUFFER_SIZE, buff, &buff_len);
+  rc = sysfs_read_attr_str(path, buff, INT_BUFFER_SIZE, &read_len);
   if(rc != USP_OK)
     return rc;
 
+  buff[INT_BUFFER_SIZE - 1] = '\0';
+  // TODO: Check read length.
   sscanf(buff, "%d", data);
   return USP_OK;
+}
+
+/**
+ * @brief Write a new integer value ofr a sysfs attribute to a file.
+ *
+ * @param path The path to the sysfs attribute to write.
+ * @param data The data to write.
+ *
+ * @return A status code.
+ */
+int
+sysfs_write_attr_int(const char *path, int data)
+{
+  int rc;
+  ssize_t write_len;
+  char buff[INT_BUFFER_SIZE];
+
+  snprintf(buff, INT_BUFFER_SIZE, "%d", data);
+  rc = sysfs_write_attr_str(path, buff, INT_BUFFER_SIZE, &write_len);
+
+  // TODO: Check write length.
+  return rc;
 }
