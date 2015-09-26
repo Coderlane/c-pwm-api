@@ -60,8 +60,12 @@ odc1_new(struct udev_device *device, int id)
 void
 odc1_search(struct us_pwm_controller_t *ctrl)
 {
+  const char *driver, *path, *attr;
+  struct us_pwm_t *pwm;
+  struct udev_device *dev;
 	struct udev_enumerate *enumer = NULL;
-	struct udev_list_entry *dev_list = NULL;
+	struct udev_list_entry *dev_list, *dev_entry,
+                         *dev_attributes, *dev_attribute;
 
 	enumer = udev_enumerate_new(ctrl->uspc_udev);
 
@@ -69,6 +73,27 @@ odc1_search(struct us_pwm_controller_t *ctrl)
 	udev_enumerate_scan_devices(enumer);
 	dev_list = udev_enumerate_get_list_entry(enumer);
 
+	udev_list_entry_foreach(dev_entry, dev_list) {
+		path = udev_list_entry_get_name(dev_entry);
+		dev = udev_device_new_from_syspath(ctrl->uspc_udev, path);
+    driver = udev_device_get_driver(dev);
+    if(strcmp(driver, "pwm-ctrl") != 0) {
+      udev_device_unref(dev);
+      continue;
+    }
+
+		dev_attributes = udev_device_get_sysattr_list_entry(dev);
+		udev_list_entry_foreach(dev_attribute, dev_attributes) {
+		  attr = udev_list_entry_get_name(dev_attribute);
+      if(strcmp(attr, "enabled0") == 0) {
+        pwm = odc1_new(dev, 0);
+        // TODO: Add to list on controller.
+      } else if(strcmp(attr, "enabled1") == 0) {
+        pwm = odc1_new(dev, 1);
+        // TODO: Add to list on controller.
+      }
+    }
+  }
 
 	udev_enumerate_unref(enumer);
 }
