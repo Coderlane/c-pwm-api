@@ -18,12 +18,6 @@
 #include "pwm_internal.h"
 #include "pwm.h"
 
-
-#define ODC1_PWM0_ON  "PWM_0 : on"
-#define ODC1_PWM1_ON  "PWM_1 : on"
-#define ODC1_PWM0_OFF "PWM_0 : off"
-#define ODC1_PWM1_OFF "PWM_1 : off"
-
 struct us_pwm_odroid_c1_t {
   int odc1_id;
   const char *odc1_off_str;
@@ -35,57 +29,48 @@ struct us_pwm_odroid_c1_t {
 
 struct us_pwm_odroid_c1_t odc1_zero = {
   .odc1_id = 0,
-  .odc1_enabled_attr = "enabled0",
-  .odc1_duty_cycle_attr = "duty0",
-  .odc1_frequency_attr = "freq0"
+  .odc1_on_str = "PWM_0 : on",
+  .odc1_off_str = "PWM_0 : off",
+  .odc1_enabled_attr = "/sys/devices/platform/pwm-ctrl/enabled0",
+  .odc1_duty_cycle_attr = "/sys/devices/platform/pwm-ctrl/duty0",
+  .odc1_frequency_attr = "/sys/devices/platform/pwm-ctrl/freq0"
 };
 
 struct us_pwm_odroid_c1_t odc1_one = {
   .odc1_id = 1,
-  .odc1_enabled_attr = "enabled1",
-  .odc1_duty_cycle_attr = "duty1",
-  .odc1_frequency_attr = "freq1"
+  .odc1_on_str = "PWM_1 : on",
+  .odc1_off_str = "PWM_1 : off",
+  .odc1_enabled_attr = "/sys/devices/platform/pwm-ctrl/enabled1",
+  .odc1_duty_cycle_attr = "/sys/devices/platform/pwm-ctrl/duty1",
+  .odc1_frequency_attr = "/sys/devices/platform/pwm-ctrl/freq1"
 };
 
 struct us_pwm_t *
 odc1_new(struct udev_device *device, int id)
 {
-  size_t syspath_len;
-  const char *syspath;
   struct us_pwm_t *pwm;
-  struct us_pwm_odroid_c1_t *odc1_pwm;
-
-
   assert(id == 0 || id == 1);
+
   pwm = us_pwm_new(device, USPWM_ODC1);
-  odc1_pwm = malloc(sizeof(struct us_pwm_odroid_c1_t));
-  odc1_pwm->odc1_id = id;
+  pwm->uspwm_ctx = id == 0 ? &odc1_zero : &odc1_one;
 
-  switch (id) {
-  case 0:
-    odc1_pwm->odc1_off_str = ODC1_PWM0_OFF;
-    odc1_pwm->odc1_on_str = ODC1_PWM0_ON;
-    break;
-  case 1:
-    odc1_pwm->odc1_off_str = ODC1_PWM1_OFF;
-    odc1_pwm->odc1_on_str = ODC1_PWM1_ON;
-    break;
-  }
-
-  syspath = udev_device_get_syspath(device);
-  syspath_len = strlen(syspath);
-
-
-  pwm->uspwm_ctx = odc1_pwm;
   return pwm;
 }
 
 void
 odc1_search(struct us_pwm_controller_t *ctrl)
 {
+	struct udev_enumerate *enumer = NULL;
+	struct udev_list_entry *dev_list = NULL;
+
+	enumer = udev_enumerate_new(ctrl->uspc_udev);
+
+  udev_enumerate_add_match_sysattr(enumer, "driver", "pwm-ctrl");
+	udev_enumerate_scan_devices(enumer);
+	dev_list = udev_enumerate_get_list_entry(enumer);
 
 
-
+	udev_enumerate_unref(enumer);
 }
 
 int

@@ -23,6 +23,8 @@ struct us_pwm_t;
  * Controller
  */
 
+typedef int (*us_pwm_search_func_t)(struct us_pwm_controller_t *);
+
 struct us_pwm_controller_t {
   USP_REF_PRIVATE
   struct udev *uspc_udev;
