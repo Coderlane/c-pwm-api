@@ -11,7 +11,7 @@
 
 #include <stdint.h>
 
-struct usp_pwm_controller_t;
+struct usp_controller_t;
 struct usp_pwm_list_t;
 struct usp_pwm_t;
 
@@ -29,9 +29,9 @@ enum usp_pwm_error_e {
  * Controller Public
  */
 
-struct usp_pwm_controller_t *usp_pwm_controller_new();
-void usp_pwm_controller_delete(void *ctx);
-struct usp_pwm_list_t* usp_pwm_controller_get_pwms(struct usp_pwm_controller_t *ctrl);
+struct usp_controller_t *usp_controller_new();
+void usp_controller_delete(void *ctx);
+struct usp_pwm_list_t* usp_controller_get_pwms(struct usp_controller_t *ctrl);
 
 /**
  * PWM Public

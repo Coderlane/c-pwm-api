@@ -1,5 +1,5 @@
 /**
- * @file pwm_controller.c
+ * @file controller.c
  * @brief
  * @author Travis Lane
  * @version 0.0.1
@@ -24,15 +24,15 @@
  *
  * @return A new PWM controller.
  */
-struct usp_pwm_controller_t *
-usp_pwm_controller_new()
+struct usp_controller_t *
+usp_controller_new()
 {
-  struct usp_pwm_controller_t *ctrl = NULL;
-  ctrl = calloc(sizeof(struct usp_pwm_controller_t), 1);
+  struct usp_controller_t *ctrl = NULL;
+  ctrl = calloc(sizeof(struct usp_controller_t), 1);
   assert(ctrl != NULL);
 
   ctrl->usppc_udev = udev_new();
-  uspp_ref_init(ctrl, usp_pwm_controller_delete);
+  uspp_ref_init(ctrl, usp_controller_delete);
 
   return ctrl;
 }
@@ -43,9 +43,9 @@ usp_pwm_controller_new()
  * @param ctx The PWM controller to delete.
  */
 void
-usp_pwm_controller_delete(void *ctx)
+usp_controller_delete(void *ctx)
 {
-  struct usp_pwm_controller_t *ctrl = ctx;
+  struct usp_controller_t *ctrl = ctx;
   assert(ctrl != NULL);
 
   udev_unref(ctrl->usppc_udev);

@@ -58,7 +58,7 @@ odc1_new(struct udev_device *device, int id)
 }
 
 void
-odc1_search(struct usp_pwm_controller_t *ctrl)
+odc1_search(struct usp_controller_t *ctrl)
 {
   const char *driver, *path, *attr;
   struct usp_pwm_t *pwm;

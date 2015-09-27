@@ -14,7 +14,7 @@
 struct udev;
 struct udev_device;
 
-struct usp_pwm_controller_t;
+struct usp_controller_t;
 struct usp_pwm_list_t;
 struct usp_pwm_list_entry_t;
 struct usp_pwm_t;
@@ -23,11 +23,11 @@ struct usp_pwm_t;
  * Controller
  */
 
-typedef int (*usp_pwm_search_func_t)(struct usp_pwm_controller_t *);
+typedef int (*usp_pwm_search_func_t)(struct usp_controller_t *);
 
-int usp_pwm_controller_search(struct usp_pwm_controller_t *ctrl);
+int usp_controller_search(struct usp_controller_t *ctrl);
 
-struct usp_pwm_controller_t {
+struct usp_controller_t {
   USP_REF_PRIVATE
 
   struct usp_pwm_list_t *usppc_dev_list;
@@ -74,7 +74,7 @@ void usp_pwm_delete(void *ctx);
 struct usp_pwm_list_t {
   USP_REF_PRIVATE
   struct usp_pwm_list_entry_t *usppl_head;
-  struct usp_pwm_controller_t *usppl_ctrl;
+  struct usp_controller_t *usppl_ctrl;
   uint32_t usppl_count;
 };
 
