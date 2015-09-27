@@ -31,7 +31,7 @@ enum usp_pwm_error_e {
 
 struct usp_controller_t *usp_controller_new();
 void usp_controller_delete(void *ctx);
-struct usp_pwm_list_t* usp_controller_get_pwms(struct usp_controller_t *ctrl);
+struct usp_pwm_list_t *usp_controller_get_pwms(struct usp_controller_t *ctrl);
 
 /**
  * PWM Public
@@ -61,7 +61,7 @@ int usp_pwm_get_frequency(struct usp_pwm_t *pwm, float *out_frequency);
   for (entry = usp_pwm_list_head(list); entry != NULL; \
        entry = usp_pwm_list_entry_next(entry))
 
-#define usp_pwm_list_foreach_safe(list, entry, next)                          \
+#define usp_pwm_list_foreach_safe(list, entry, next)                           \
   for (entry = usp_pwm_list_head(list), next = usp_pwm_list_entry_next(entry); \
        entry != NULL; entry = next, next = usp_pwm_list_entry_next(entry))
 

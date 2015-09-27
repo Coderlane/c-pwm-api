@@ -26,19 +26,19 @@ pwm_test_init(struct usp_pwm_test_t *pwm_test, struct usp_pwm_t *pwm,
               const char *id, int should_free)
 {
   memset(pwm, 0, sizeof(struct usp_pwm_t));
-  pwm->usppwm_ctx = pwm_test;
+  pwm->uspwm_ctx = pwm_test;
   pwm_test->uspt_id = id;
   pwm_test->uspt_should_free = should_free;
   pwm_test->uspt_freed = 0;
 
-  uspp_ref_init(pwm, pwm_test_free);
+  usp_ref_init(pwm, pwm_test_free);
 }
 
 void
 pwm_test_free(void *arg)
 {
   struct usp_pwm_t *pwm = arg;
-  struct usp_pwm_test_t *pwm_test = pwm->usppwm_ctx;
+  struct usp_pwm_test_t *pwm_test = pwm->uspwm_ctx;
 
   fail_if(pwm_test->uspt_freed == 1, "pwm_test already freed.");
   pwm_test->uspt_freed = 1;

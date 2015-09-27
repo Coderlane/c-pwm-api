@@ -27,19 +27,19 @@ ref_free(void *arg)
 START_TEST(test_ref_sf)
 {
   struct test_ref_t ref, *ref_ptr = &ref;
-  uspp_ref_init(ref_ptr, ref_free);
+  usp_ref_init(ref_ptr, ref_free);
   ref.tr_should_free = 1;
   ref.tr_freed = 0;
 
-  fail_if(ref.uspp_ref_count != 1, "ref not initialized to one.");
+  fail_if(ref.usp_ref_count != 1, "ref not initialized to one.");
 
-  uspp_ref(ref_ptr);
-  fail_if(ref.uspp_ref_count != 2, "ref not incremented properly.");
+  usp_ref(ref_ptr);
+  fail_if(ref.usp_ref_count != 2, "ref not incremented properly.");
 
-  uspp_unref(ref_ptr);
-  fail_if(ref.uspp_ref_count != 1, "ref not decremented properly.");
-  uspp_unref(ref_ptr);
-  fail_if(ref.uspp_ref_count != 0, "ref not decremented properly.");
+  usp_unref(ref_ptr);
+  fail_if(ref.usp_ref_count != 1, "ref not decremented properly.");
+  usp_unref(ref_ptr);
+  fail_if(ref.usp_ref_count != 0, "ref not decremented properly.");
   fail_if(ref.tr_freed == 0, "ref not freed when it should have been.");
 }
 END_TEST
@@ -47,18 +47,18 @@ END_TEST
 START_TEST(test_ref_snf)
 {
   struct test_ref_t ref, *ref_ptr = &ref;
-  uspp_ref_init(ref_ptr, ref_free);
+  usp_ref_init(ref_ptr, ref_free);
   ref.tr_should_free = 0;
   ref.tr_freed = 0;
 
-  fail_if(ref.uspp_ref_count != 1, "ref not initialized to one.");
+  fail_if(ref.usp_ref_count != 1, "ref not initialized to one.");
 
-  uspp_ref(ref_ptr);
-  uspp_ref(ref_ptr);
-  fail_if(ref.uspp_ref_count != 3, "ref not incremented properly.");
+  usp_ref(ref_ptr);
+  usp_ref(ref_ptr);
+  fail_if(ref.usp_ref_count != 3, "ref not incremented properly.");
 
-  uspp_unref(ref_ptr);
-  fail_if(ref.uspp_ref_count != 2, "ref not decremented properly.");
+  usp_unref(ref_ptr);
+  fail_if(ref.usp_ref_count != 2, "ref not decremented properly.");
   fail_if(ref.tr_freed == 1, "ref freed when it should not have been.");
 }
 END_TEST

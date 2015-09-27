@@ -31,8 +31,8 @@ usp_controller_new()
   ctrl = calloc(sizeof(struct usp_controller_t), 1);
   assert(ctrl != NULL);
 
-  ctrl->usppc_udev = udev_new();
-  uspp_ref_init(ctrl, usp_controller_delete);
+  ctrl->uspc_udev = udev_new();
+  usp_ref_init(ctrl, usp_controller_delete);
 
   return ctrl;
 }
@@ -48,7 +48,7 @@ usp_controller_delete(void *ctx)
   struct usp_controller_t *ctrl = ctx;
   assert(ctrl != NULL);
 
-  udev_unref(ctrl->usppc_udev);
+  udev_unref(ctrl->uspc_udev);
   free(ctrl);
 }
 

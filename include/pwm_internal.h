@@ -30,8 +30,8 @@ int usp_controller_search(struct usp_controller_t *ctrl);
 struct usp_controller_t {
   USP_REF_PRIVATE
 
-  struct usp_pwm_list_t *usppc_dev_list;
-  struct udev *usppc_udev;
+  struct usp_pwm_list_t *uspc_dev_list;
+  struct udev *uspc_udev;
 };
 
 /**
@@ -49,22 +49,22 @@ typedef int (*usp_pwm_generic_void_func_t)(struct usp_pwm_t *, void *);
 struct usp_pwm_t {
   USP_REF_PRIVATE
 
-  struct udev_device *usppwm_device;
+  struct udev_device *uspwm_device;
 
-  usp_pwm_generic_func_t usppwm_enable_func;
-  usp_pwm_generic_func_t usppwm_disable_func;
-  usp_pwm_set_float_func_t usppwm_set_duty_cycle_func;
-  usp_pwm_set_float_func_t usppwm_set_frequency_func;
-  usp_pwm_get_float_func_t usppwm_get_duty_cycle_func;
-  usp_pwm_get_float_func_t usppwm_get_frequency_func;
+  usp_pwm_generic_func_t uspwm_enable_func;
+  usp_pwm_generic_func_t uspwm_disable_func;
+  usp_pwm_set_float_func_t uspwm_set_duty_cycle_func;
+  usp_pwm_set_float_func_t uspwm_set_frequency_func;
+  usp_pwm_get_float_func_t uspwm_get_duty_cycle_func;
+  usp_pwm_get_float_func_t uspwm_get_frequency_func;
 
-  enum usp_pwm_type_e usppwm_type;
-  void *usppwm_ctx;
-  struct usp_pwm_t *usppwm_next;
+  enum usp_pwm_type_e uspwm_type;
+  void *uspwm_ctx;
+  struct usp_pwm_t *uspwm_next;
 };
 
 struct usp_pwm_t *usp_pwm_new(struct udev_device *device,
-                            enum usp_pwm_type_e type);
+                              enum usp_pwm_type_e type);
 void usp_pwm_delete(void *ctx);
 
 /**
@@ -73,14 +73,14 @@ void usp_pwm_delete(void *ctx);
 
 struct usp_pwm_list_t {
   USP_REF_PRIVATE
-  struct usp_pwm_list_entry_t *usppl_head;
-  struct usp_controller_t *usppl_ctrl;
-  uint32_t usppl_count;
+  struct usp_pwm_list_entry_t *uspl_head;
+  struct usp_controller_t *uspl_ctrl;
+  uint32_t uspl_count;
 };
 
 struct usp_pwm_list_entry_t {
-  struct usp_pwm_list_entry_t *usppl_next;
-  struct usp_pwm_t *usppl_pwm;
+  struct usp_pwm_list_entry_t *uspl_next;
+  struct usp_pwm_t *uspl_pwm;
 };
 
 struct usp_pwm_list_t *usp_pwm_list_new();

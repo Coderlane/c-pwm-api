@@ -52,7 +52,7 @@ odc1_new(struct udev_device *device, int id)
   assert(id == 0 || id == 1);
 
   pwm = usp_pwm_new(device, USPWM_ODC1);
-  pwm->usppwm_ctx = id == 0 ? &odc1_zero : &odc1_one;
+  pwm->uspwm_ctx = id == 0 ? &odc1_zero : &odc1_one;
 
   return pwm;
 }
@@ -67,7 +67,7 @@ odc1_search(struct usp_controller_t *ctrl)
 	struct udev_list_entry *dev_list, *dev_entry,
                          *dev_attributes, *dev_attribute;
 
-	enumer = udev_enumerate_new(ctrl->usppc_udev);
+	enumer = udev_enumerate_new(ctrl->uspc_udev);
 
   udev_enumerate_add_match_sysattr(enumer, "driver", "pwm-ctrl");
 	udev_enumerate_scan_devices(enumer);
@@ -75,7 +75,7 @@ odc1_search(struct usp_controller_t *ctrl)
 
 	udev_list_entry_foreach(dev_entry, dev_list) {
 		path = udev_list_entry_get_name(dev_entry);
-		dev = udev_device_new_from_syspath(ctrl->usppc_udev, path);
+		dev = udev_device_new_from_syspath(ctrl->uspc_udev, path);
     driver = udev_device_get_driver(dev);
     if(strcmp(driver, "pwm-ctrl") != 0) {
       udev_device_unref(dev);
@@ -102,8 +102,8 @@ int
 odc1_enable(struct usp_pwm_t *pwm)
 {
   struct usp_pwm_odroid_c1_t *odc1_pwm;
-  assert(pwm->usppwm_type == USPWM_ODC1);
-  odc1_pwm = pwm->usppwm_ctx;
+  assert(pwm->uspwm_type == USPWM_ODC1);
+  odc1_pwm = pwm->uspwm_ctx;
 
   return USP_NOT_IMPLEMENTED;
 }
@@ -112,8 +112,8 @@ int
 odc1_disable(struct usp_pwm_t *pwm)
 {
   struct usp_pwm_odroid_c1_t *odc1_pwm;
-  assert(pwm->usppwm_type == USPWM_ODC1);
-  odc1_pwm = pwm->usppwm_ctx;
+  assert(pwm->uspwm_type == USPWM_ODC1);
+  odc1_pwm = pwm->uspwm_ctx;
 
   return USP_NOT_IMPLEMENTED;
 }
@@ -122,8 +122,8 @@ int
 odc1_set_duty_cycle(struct usp_pwm_t *pwm, float duty_cycle)
 {
   struct usp_pwm_odroid_c1_t *odc1_pwm;
-  assert(pwm->usppwm_type == USPWM_ODC1);
-  odc1_pwm = pwm->usppwm_ctx;
+  assert(pwm->uspwm_type == USPWM_ODC1);
+  odc1_pwm = pwm->uspwm_ctx;
 
   return USP_NOT_IMPLEMENTED;
 }
@@ -132,8 +132,8 @@ int
 odc1_get_duty_cycle(struct usp_pwm_t *pwm, float *out_duty_cycle)
 {
   struct usp_pwm_odroid_c1_t *odc1_pwm;
-  assert(pwm->usppwm_type == USPWM_ODC1);
-  odc1_pwm = pwm->usppwm_ctx;
+  assert(pwm->uspwm_type == USPWM_ODC1);
+  odc1_pwm = pwm->uspwm_ctx;
 
   return USP_NOT_IMPLEMENTED;
 }
@@ -142,8 +142,8 @@ int
 odc1_set_frequency(struct usp_pwm_t *pwm, float duty_cycle)
 {
   struct usp_pwm_odroid_c1_t *odc1_pwm;
-  assert(pwm->usppwm_type == USPWM_ODC1);
-  odc1_pwm = pwm->usppwm_ctx;
+  assert(pwm->uspwm_type == USPWM_ODC1);
+  odc1_pwm = pwm->uspwm_ctx;
 
   return USP_NOT_IMPLEMENTED;
 }
@@ -152,8 +152,8 @@ int
 odc1_get_frequency(struct usp_pwm_t *pwm, float *out_duty_cycle)
 {
   struct usp_pwm_odroid_c1_t *odc1_pwm;
-  assert(pwm->usppwm_type == USPWM_ODC1);
-  odc1_pwm = pwm->usppwm_ctx;
+  assert(pwm->uspwm_type == USPWM_ODC1);
+  odc1_pwm = pwm->uspwm_ctx;
 
   return USP_NOT_IMPLEMENTED;
 }

@@ -27,10 +27,10 @@ usp_pwm_list_new()
 {
   struct usp_pwm_list_t *list = NULL;
   list = malloc(sizeof(struct usp_pwm_list_t));
-  list->usppl_count = 0;
-  list->usppl_ctrl = NULL;
-  list->usppl_head = NULL;
-  uspp_ref_init(list, usp_pwm_list_delete);
+  list->uspl_count = 0;
+  list->uspl_ctrl = NULL;
+  list->uspl_head = NULL;
+  usp_ref_init(list, usp_pwm_list_delete);
   return list;
 }
 
@@ -47,7 +47,7 @@ usp_pwm_list_delete(void *ctx)
   struct usp_pwm_list_t *list = ctx;
   struct usp_pwm_list_entry_t *entry, *next;
   usp_pwm_list_foreach_safe(list, entry, next) {
-    usp_pwm_unref(entry->usppl_pwm);
+    usp_pwm_unref(entry->uspl_pwm);
     free(entry);
   }
   free(list);
@@ -70,13 +70,13 @@ usp_pwm_list_add(struct usp_pwm_list_t *list, struct usp_pwm_t *pwm)
   assert(pwm != NULL);
 
   list_entry = malloc(sizeof(struct usp_pwm_list_entry_t));
-  list_entry->usppl_pwm = pwm;
-  uspp_ref(pwm);
+  list_entry->uspl_pwm = pwm;
+  usp_ref(pwm);
 
-  list->usppl_count++;
+  list->uspl_count++;
 
-  list_entry->usppl_next = list->usppl_head;
-  list->usppl_head = list_entry;
+  list_entry->uspl_next = list->uspl_head;
+  list->uspl_head = list_entry;
   return USP_OK;
 }
 
@@ -90,7 +90,7 @@ usp_pwm_list_add(struct usp_pwm_list_t *list, struct usp_pwm_t *pwm)
 struct usp_pwm_list_entry_t *
 usp_pwm_list_head(struct usp_pwm_list_t *list)
 {
-  return list->usppl_head;
+  return list->uspl_head;
 }
 
 /**
@@ -103,7 +103,7 @@ usp_pwm_list_head(struct usp_pwm_list_t *list)
 struct usp_pwm_list_entry_t *
 usp_pwm_list_entry_next(struct usp_pwm_list_entry_t *entry)
 {
-  return entry == NULL ? NULL : entry->usppl_next;
+  return entry == NULL ? NULL : entry->uspl_next;
 }
 
 /**
@@ -114,7 +114,7 @@ usp_pwm_list_entry_next(struct usp_pwm_list_entry_t *entry)
 void
 usp_pwm_list_ref(struct usp_pwm_list_t *list)
 {
-  uspp_ref(list);
+  usp_ref(list);
 }
 
 /**
@@ -125,5 +125,5 @@ usp_pwm_list_ref(struct usp_pwm_list_t *list)
 void
 usp_pwm_list_unref(struct usp_pwm_list_t *list)
 {
-  uspp_unref(list);
+  usp_unref(list);
 }

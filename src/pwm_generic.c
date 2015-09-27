@@ -32,10 +32,10 @@ usp_pwm_new(struct udev_device *device, enum usp_pwm_type_e type)
   pwm = calloc(sizeof(struct usp_pwm_t), 1);
   assert(pwm != NULL);
 
-  udev_device_ref(pwm->usppwm_device);
-  pwm->usppwm_device = device;
-  pwm->usppwm_type = type;
-  uspp_ref_init(pwm, usp_pwm_delete);
+  udev_device_ref(pwm->uspwm_device);
+  pwm->uspwm_device = device;
+  pwm->uspwm_type = type;
+  usp_ref_init(pwm, usp_pwm_delete);
 
   return pwm;
 }
@@ -50,10 +50,10 @@ usp_pwm_delete(void *ctx)
 {
   struct usp_pwm_t *pwm = ctx;
   assert(pwm != NULL);
-  assert(pwm->uspp_ref_count == 0);
+  assert(pwm->usp_ref_count == 0);
 
-  if (pwm->usppwm_device != NULL)
-    udev_device_unref(pwm->usppwm_device);
+  if (pwm->uspwm_device != NULL)
+    udev_device_unref(pwm->uspwm_device);
   free(pwm);
 }
 
@@ -65,7 +65,7 @@ usp_pwm_delete(void *ctx)
 void
 usp_pwm_ref(struct usp_pwm_t *pwm)
 {
-  uspp_ref(pwm);
+  usp_ref(pwm);
 }
 
 /**
@@ -77,7 +77,7 @@ usp_pwm_ref(struct usp_pwm_t *pwm)
 void
 usp_pwm_unref(struct usp_pwm_t *pwm)
 {
-  uspp_unref(pwm);
+  usp_unref(pwm);
 }
 
 /**
@@ -91,7 +91,7 @@ usp_pwm_unref(struct usp_pwm_t *pwm)
 int
 usp_pwm_enable(struct usp_pwm_t *pwm)
 {
-  return pwm->usppwm_enable_func(pwm);
+  return pwm->uspwm_enable_func(pwm);
 }
 
 /**
@@ -105,7 +105,7 @@ usp_pwm_enable(struct usp_pwm_t *pwm)
 int
 usp_pwm_disable(struct usp_pwm_t *pwm)
 {
-  return pwm->usppwm_disable_func(pwm);
+  return pwm->uspwm_disable_func(pwm);
 }
 
 /**
@@ -121,7 +121,7 @@ usp_pwm_set_duty_cycle(struct usp_pwm_t *pwm, float duty_cycle)
 {
   if (duty_cycle < 0.0f || duty_cycle > 100.0f)
     return USP_INVALID_RANGE;
-  return pwm->usppwm_set_duty_cycle_func(pwm, duty_cycle);
+  return pwm->uspwm_set_duty_cycle_func(pwm, duty_cycle);
 }
 
 /**
@@ -137,7 +137,7 @@ usp_pwm_set_frequency(struct usp_pwm_t *pwm, float frequency)
 {
   if (frequency < 0.0f)
     return USP_INVALID_RANGE;
-  return pwm->usppwm_set_duty_cycle_func(pwm, frequency);
+  return pwm->uspwm_set_duty_cycle_func(pwm, frequency);
 }
 
 /**
@@ -152,7 +152,7 @@ int
 usp_pwm_get_duty_cycle(struct usp_pwm_t *pwm, float *out_duty_cycle)
 {
   assert(out_duty_cycle != NULL);
-  return pwm->usppwm_get_duty_cycle_func(pwm, out_duty_cycle);
+  return pwm->uspwm_get_duty_cycle_func(pwm, out_duty_cycle);
 }
 
 /**
@@ -167,5 +167,5 @@ int
 usp_pwm_get_frequency(struct usp_pwm_t *pwm, float *out_frequency)
 {
   assert(out_frequency != NULL);
-  return pwm->usppwm_get_duty_cycle_func(pwm, out_frequency);
+  return pwm->uspwm_get_duty_cycle_func(pwm, out_frequency);
 }

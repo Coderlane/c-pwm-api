@@ -20,7 +20,7 @@ struct usp_pwm_test_t {
 int
 uspt_set_duty_cycle(struct usp_pwm_t *pwm, float duty_cycle)
 {
-  struct usp_pwm_test_t *pwm_test = pwm->usppwm_ctx;
+  struct usp_pwm_test_t *pwm_test = pwm->uspwm_ctx;
   pwm_test->uspt_duty_cycle = duty_cycle;
   return USP_OK;
 }
@@ -28,7 +28,7 @@ uspt_set_duty_cycle(struct usp_pwm_t *pwm, float duty_cycle)
 int
 uspt_get_duty_cycle(struct usp_pwm_t *pwm, float *out_duty_cycle)
 {
-  struct usp_pwm_test_t *pwm_test = pwm->usppwm_ctx;
+  struct usp_pwm_test_t *pwm_test = pwm->uspwm_ctx;
   *out_duty_cycle = pwm_test->uspt_duty_cycle;
   return USP_OK;
 }
@@ -36,7 +36,7 @@ uspt_get_duty_cycle(struct usp_pwm_t *pwm, float *out_duty_cycle)
 int
 uspt_set_frequency(struct usp_pwm_t *pwm, float frequency)
 {
-  struct usp_pwm_test_t *pwm_test = pwm->usppwm_ctx;
+  struct usp_pwm_test_t *pwm_test = pwm->uspwm_ctx;
   pwm_test->uspt_frequency = frequency;
   return USP_OK;
 }
@@ -44,7 +44,7 @@ uspt_set_frequency(struct usp_pwm_t *pwm, float frequency)
 int
 uspt_get_frequency(struct usp_pwm_t *pwm, float *out_frequency)
 {
-  struct usp_pwm_test_t *pwm_test = pwm->usppwm_ctx;
+  struct usp_pwm_test_t *pwm_test = pwm->uspwm_ctx;
   *out_frequency = pwm_test->uspt_frequency;
   return USP_OK;
 }
@@ -52,11 +52,11 @@ uspt_get_frequency(struct usp_pwm_t *pwm, float *out_frequency)
 void
 uspt_init(struct usp_pwm_t *pwm, struct usp_pwm_test_t *pwm_test)
 {
-  pwm->usppwm_ctx = pwm_test;
-  pwm->usppwm_set_duty_cycle_func = uspt_set_duty_cycle;
-  pwm->usppwm_get_duty_cycle_func = uspt_get_duty_cycle;
-  pwm->usppwm_set_frequency_func = uspt_set_frequency;
-  pwm->usppwm_get_frequency_func = uspt_get_frequency;
+  pwm->uspwm_ctx = pwm_test;
+  pwm->uspwm_set_duty_cycle_func = uspt_set_duty_cycle;
+  pwm->uspwm_get_duty_cycle_func = uspt_get_duty_cycle;
+  pwm->uspwm_set_frequency_func = uspt_set_frequency;
+  pwm->uspwm_get_frequency_func = uspt_get_frequency;
 }
 
 START_TEST(test_pwm_set_get_duty_cycle_valid)
