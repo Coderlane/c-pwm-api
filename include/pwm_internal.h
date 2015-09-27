@@ -9,6 +9,8 @@
 #ifndef USP_PWM_INTERNAL_H
 #define USP_PWM_INTERNAL_H
 
+#include <stdbool.h>
+
 #include "ref_internal.h"
 
 struct udev;
@@ -41,6 +43,7 @@ struct usp_controller_t {
 
   struct usp_pwm_list_t *uspc_dev_list;
   struct udev *uspc_udev;
+  bool uspc_initialized;
 };
 
 /**
