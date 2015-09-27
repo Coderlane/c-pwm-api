@@ -72,7 +72,7 @@ out:
  * @return A statusp code.
  */
 int
-sysfs_write_attr_str(const char *path, char *buff, size_t buff_len,
+sysfs_write_attr_str(const char *path, const char *buff, size_t buff_len,
                      ssize_t *out_len)
 {
   int fd, result;
@@ -143,6 +143,54 @@ sysfs_write_attr_int(const char *path, int data)
   char buff[INT_BUFFER_SIZE];
 
   snprintf(buff, INT_BUFFER_SIZE, "%d", data);
+  rc = sysfs_write_attr_str(path, buff, INT_BUFFER_SIZE, &write_len);
+
+  // TODO: Check write length.
+  return rc;
+}
+
+/**
+ * @brief Read a new float value for a sysfs attribute from a file.
+ *
+ * @param path The path to the sysfs attribute to read.
+ * @param data The data read.
+ *
+ * @return A statusp code.
+ */
+int
+sysfs_read_attr_float(const char *path, float *data)
+{
+  float rc;
+  ssize_t read_len;
+  char buff[INT_BUFFER_SIZE];
+
+  rc = sysfs_read_attr_str(path, buff, INT_BUFFER_SIZE, &read_len);
+  if(rc != USP_OK)
+    return rc;
+
+  buff[INT_BUFFER_SIZE - 1] = '\0';
+  // TODO: Check read length.
+  sscanf(buff, "%f", data);
+
+  return USP_OK;
+}
+
+/**
+ * @brief Write a new float value ofr a sysfs attribute to a file.
+ *
+ * @param path The path to the sysfs attribute to write.
+ * @param data The data to write.
+ *
+ * @return A statusp code.
+ */
+int
+sysfs_write_attr_float(const char *path, float data)
+{
+  float rc;
+  ssize_t write_len;
+  char buff[INT_BUFFER_SIZE];
+
+  snprintf(buff, INT_BUFFER_SIZE, "%f", data);
   rc = sysfs_write_attr_str(path, buff, INT_BUFFER_SIZE, &write_len);
 
   // TODO: Check write length.

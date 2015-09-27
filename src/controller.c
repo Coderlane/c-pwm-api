@@ -19,6 +19,8 @@
  * Controller
  */
 
+static usp_pwm_search_func_t usp_controller_search_funcs[] = {odc1_search};
+
 /**
  * @brief Create a new PWM controller to collect individual PWMs.
  *
@@ -52,3 +54,24 @@ usp_controller_delete(void *ctx)
   free(ctrl);
 }
 
+int
+usp_controller_search(struct usp_controller_t *ctrl)
+{
+  for (int i = 0; i < USP_SEARCH_FUNC_COUNT; i++) {
+    usp_controller_search_funcs[i](ctrl);
+  }
+  return USP_OK;
+}
+
+int
+usp_controller_add_pwm(struct usp_controller_t *ctrl, struct usp_pwm_t *pwm)
+{
+  return usp_pwm_list_add(ctrl->uspc_dev_list, pwm);
+}
+
+struct usp_pwm_list_t *
+usp_controller_get_pwms(struct usp_controller_t *ctrl)
+{
+  usp_pwm_list_ref(ctrl->uspc_dev_list);
+  return ctrl->uspc_dev_list;
+}

@@ -23,9 +23,18 @@ struct usp_pwm_t;
  * Controller
  */
 
+
+
+/* Search Functions */
+
 typedef int (*usp_pwm_search_func_t)(struct usp_controller_t *);
+int odc1_search(struct usp_controller_t *ctrl);
+
+#define USP_SEARCH_FUNC_COUNT 1
 
 int usp_controller_search(struct usp_controller_t *ctrl);
+int usp_controller_add_pwm(struct usp_controller_t *ctrl,
+                           struct usp_pwm_t *pwm);
 
 struct usp_controller_t {
   USP_REF_PRIVATE
@@ -92,9 +101,11 @@ int usp_pwm_list_add(struct usp_pwm_list_t *list, struct usp_pwm_t *pwm);
  */
 int sysfs_read_attr_str(const char *path, char *buff, size_t buff_size,
                         ssize_t *out_len);
-int sysfs_write_attr_str(const char *path, char *buff, size_t buff_len,
+int sysfs_write_attr_str(const char *path, const char *buff, size_t buff_len,
                          ssize_t *out_len);
 int sysfs_read_attr_int(const char *path, int *data);
 int sysfs_write_attr_int(const char *path, int data);
+int sysfs_read_attr_float(const char *path, float *data);
+int sysfs_write_attr_float(const char *path, float data);
 
 #endif /* USP_PWM_INTERNAL_H */
