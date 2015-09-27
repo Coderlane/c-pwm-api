@@ -11,34 +11,34 @@
 #include "pwm.h"
 #include "pwm_internal.h"
 
-struct us_pwm_test_t {
+struct usp_pwm_test_t {
   const char *uspt_id;
   int uspt_should_free;
   int uspt_freed;
 };
 
-void pwm_test_init(struct us_pwm_test_t *pwm_test, struct us_pwm_t *pwm,
+void pwm_test_init(struct usp_pwm_test_t *pwm_test, struct usp_pwm_t *pwm,
                    const char *id, int should_free);
 void pwm_test_free(void *arg);
 
 void
-pwm_test_init(struct us_pwm_test_t *pwm_test, struct us_pwm_t *pwm,
+pwm_test_init(struct usp_pwm_test_t *pwm_test, struct usp_pwm_t *pwm,
               const char *id, int should_free)
 {
-  memset(pwm, 0, sizeof(struct us_pwm_t));
-  pwm->uspwm_ctx = pwm_test;
+  memset(pwm, 0, sizeof(struct usp_pwm_t));
+  pwm->usppwm_ctx = pwm_test;
   pwm_test->uspt_id = id;
   pwm_test->uspt_should_free = should_free;
   pwm_test->uspt_freed = 0;
 
-  usp_ref_init(pwm, pwm_test_free);
+  uspp_ref_init(pwm, pwm_test_free);
 }
 
 void
 pwm_test_free(void *arg)
 {
-  struct us_pwm_t *pwm = arg;
-  struct us_pwm_test_t *pwm_test = pwm->uspwm_ctx;
+  struct usp_pwm_t *pwm = arg;
+  struct usp_pwm_test_t *pwm_test = pwm->usppwm_ctx;
 
   fail_if(pwm_test->uspt_freed == 1, "pwm_test already freed.");
   pwm_test->uspt_freed = 1;
@@ -48,24 +48,24 @@ pwm_test_free(void *arg)
 
 START_TEST(test_list_order)
 {
-  struct us_pwm_t pwm_a, pwm_b, pwm_c;
-  struct us_pwm_test_t pwm_test_a, pwm_test_b, pwm_test_c;
-  struct us_pwm_list_t *list;
-  list = us_pwm_list_new();
+  struct usp_pwm_t pwm_a, pwm_b, pwm_c;
+  struct usp_pwm_test_t pwm_test_a, pwm_test_b, pwm_test_c;
+  struct usp_pwm_list_t *list;
+  list = usp_pwm_list_new();
 
   pwm_test_init(&pwm_test_a, &pwm_a, "test_a", 1);
   pwm_test_init(&pwm_test_b, &pwm_b, "test_b", 1);
   pwm_test_init(&pwm_test_c, &pwm_c, "test_c", 1);
 
-  us_pwm_list_add(list, &pwm_a);
-  us_pwm_list_add(list, &pwm_b);
-  us_pwm_list_add(list, &pwm_c);
+  usp_pwm_list_add(list, &pwm_a);
+  usp_pwm_list_add(list, &pwm_b);
+  usp_pwm_list_add(list, &pwm_c);
 
-  us_pwm_unref(&pwm_a);
-  us_pwm_unref(&pwm_b);
-  us_pwm_unref(&pwm_c);
+  usp_pwm_unref(&pwm_a);
+  usp_pwm_unref(&pwm_b);
+  usp_pwm_unref(&pwm_c);
 
-  us_pwm_list_unref(list);
+  usp_pwm_list_unref(list);
 
   fail_if(pwm_test_a.uspt_freed == 0, "pwm_test_a not freed.");
   fail_if(pwm_test_b.uspt_freed == 0, "pwm_test_b not freed.");
@@ -75,23 +75,23 @@ END_TEST
 
 START_TEST(test_list_post_unref_ref)
 {
-  struct us_pwm_t pwm_a, pwm_b, pwm_c;
-  struct us_pwm_test_t pwm_test_a, pwm_test_b, pwm_test_c;
-  struct us_pwm_list_t *list;
-  list = us_pwm_list_new();
+  struct usp_pwm_t pwm_a, pwm_b, pwm_c;
+  struct usp_pwm_test_t pwm_test_a, pwm_test_b, pwm_test_c;
+  struct usp_pwm_list_t *list;
+  list = usp_pwm_list_new();
 
   pwm_test_init(&pwm_test_a, &pwm_a, "test_a", 1);
   pwm_test_init(&pwm_test_b, &pwm_b, "test_b", 1);
   pwm_test_init(&pwm_test_c, &pwm_c, "test_c", 1);
 
-  us_pwm_list_add(list, &pwm_a);
-  us_pwm_list_add(list, &pwm_b);
-  us_pwm_list_add(list, &pwm_c);
+  usp_pwm_list_add(list, &pwm_a);
+  usp_pwm_list_add(list, &pwm_b);
+  usp_pwm_list_add(list, &pwm_c);
 
-  us_pwm_unref(&pwm_a);
-  us_pwm_unref(&pwm_b);
-  us_pwm_unref(&pwm_c);
-  us_pwm_list_unref(list);
+  usp_pwm_unref(&pwm_a);
+  usp_pwm_unref(&pwm_b);
+  usp_pwm_unref(&pwm_c);
+  usp_pwm_list_unref(list);
 }
 END_TEST
 

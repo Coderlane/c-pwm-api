@@ -14,74 +14,78 @@
 struct udev;
 struct udev_device;
 
-struct us_pwm_controller_t;
-struct us_pwm_list_t;
-struct us_pwm_list_entry_t;
-struct us_pwm_t;
+struct usp_pwm_controller_t;
+struct usp_pwm_list_t;
+struct usp_pwm_list_entry_t;
+struct usp_pwm_t;
 
 /**
  * Controller
  */
 
-typedef int (*us_pwm_search_func_t)(struct us_pwm_controller_t *);
+typedef int (*usp_pwm_search_func_t)(struct usp_pwm_controller_t *);
 
-struct us_pwm_controller_t {
+int usp_pwm_controller_search(struct usp_pwm_controller_t *ctrl);
+
+struct usp_pwm_controller_t {
   USP_REF_PRIVATE
-  struct udev *uspc_udev;
+
+  struct usp_pwm_list_t *usppc_dev_list;
+  struct udev *usppc_udev;
 };
 
 /**
  * PWM
  */
 
-enum us_pwm_state_e { USPWM_DISABLED = 0, USPWM_ENABLED = 1 };
-enum us_pwm_type_e { USPWM_ODC1, USPWM_TEST };
+enum usp_pwm_state_e { USPWM_DISABLED = 0, USPWM_ENABLED = 1 };
+enum usp_pwm_type_e { USPWM_ODC1, USPWM_TEST };
 
-typedef int (*us_pwm_set_float_func_t)(struct us_pwm_t *, float);
-typedef int (*us_pwm_get_float_func_t)(struct us_pwm_t *, float *);
-typedef int (*us_pwm_generic_func_t)(struct us_pwm_t *);
-typedef int (*us_pwm_generic_void_func_t)(struct us_pwm_t *, void *);
+typedef int (*usp_pwm_set_float_func_t)(struct usp_pwm_t *, float);
+typedef int (*usp_pwm_get_float_func_t)(struct usp_pwm_t *, float *);
+typedef int (*usp_pwm_generic_func_t)(struct usp_pwm_t *);
+typedef int (*usp_pwm_generic_void_func_t)(struct usp_pwm_t *, void *);
 
-struct us_pwm_t {
+struct usp_pwm_t {
   USP_REF_PRIVATE
 
-  struct udev_device *uspwm_device;
+  struct udev_device *usppwm_device;
 
-  us_pwm_generic_func_t uspwm_enable_func;
-  us_pwm_generic_func_t uspwm_disable_func;
-  us_pwm_set_float_func_t uspwm_set_duty_cycle_func;
-  us_pwm_set_float_func_t uspwm_set_frequency_func;
-  us_pwm_get_float_func_t uspwm_get_duty_cycle_func;
-  us_pwm_get_float_func_t uspwm_get_frequency_func;
+  usp_pwm_generic_func_t usppwm_enable_func;
+  usp_pwm_generic_func_t usppwm_disable_func;
+  usp_pwm_set_float_func_t usppwm_set_duty_cycle_func;
+  usp_pwm_set_float_func_t usppwm_set_frequency_func;
+  usp_pwm_get_float_func_t usppwm_get_duty_cycle_func;
+  usp_pwm_get_float_func_t usppwm_get_frequency_func;
 
-  enum us_pwm_type_e uspwm_type;
-  void *uspwm_ctx;
-  struct us_pwm_t *uspwm_next;
+  enum usp_pwm_type_e usppwm_type;
+  void *usppwm_ctx;
+  struct usp_pwm_t *usppwm_next;
 };
 
-struct us_pwm_t *us_pwm_new(struct udev_device *device,
-                            enum us_pwm_type_e type);
-void us_pwm_delete(void *ctx);
+struct usp_pwm_t *usp_pwm_new(struct udev_device *device,
+                            enum usp_pwm_type_e type);
+void usp_pwm_delete(void *ctx);
 
 /**
  * List
  */
 
-struct us_pwm_list_t {
+struct usp_pwm_list_t {
   USP_REF_PRIVATE
-  struct us_pwm_list_entry_t *uspl_head;
-  struct us_pwm_controller_t *uspl_ctrl;
-  uint32_t uspl_count;
+  struct usp_pwm_list_entry_t *usppl_head;
+  struct usp_pwm_controller_t *usppl_ctrl;
+  uint32_t usppl_count;
 };
 
-struct us_pwm_list_entry_t {
-  struct us_pwm_list_entry_t *uspl_next;
-  struct us_pwm_t *uspl_pwm;
+struct usp_pwm_list_entry_t {
+  struct usp_pwm_list_entry_t *usppl_next;
+  struct usp_pwm_t *usppl_pwm;
 };
 
-struct us_pwm_list_t *us_pwm_list_new();
-void us_pwm_list_delete(void *ctx);
-int us_pwm_list_add(struct us_pwm_list_t *list, struct us_pwm_t *pwm);
+struct usp_pwm_list_t *usp_pwm_list_new();
+void usp_pwm_list_delete(void *ctx);
+int usp_pwm_list_add(struct usp_pwm_list_t *list, struct usp_pwm_t *pwm);
 
 /**
  * sysfs

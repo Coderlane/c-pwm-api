@@ -24,15 +24,15 @@
  *
  * @return A new PWM controller.
  */
-struct us_pwm_controller_t *
-us_pwm_controller_new()
+struct usp_pwm_controller_t *
+usp_pwm_controller_new()
 {
-  struct us_pwm_controller_t *ctrl = NULL;
-  ctrl = calloc(sizeof(struct us_pwm_controller_t), 1);
+  struct usp_pwm_controller_t *ctrl = NULL;
+  ctrl = calloc(sizeof(struct usp_pwm_controller_t), 1);
   assert(ctrl != NULL);
 
-  ctrl->uspc_udev = udev_new();
-  usp_ref_init(ctrl, us_pwm_controller_delete);
+  ctrl->usppc_udev = udev_new();
+  uspp_ref_init(ctrl, usp_pwm_controller_delete);
 
   return ctrl;
 }
@@ -43,12 +43,12 @@ us_pwm_controller_new()
  * @param ctx The PWM controller to delete.
  */
 void
-us_pwm_controller_delete(void *ctx)
+usp_pwm_controller_delete(void *ctx)
 {
-  struct us_pwm_controller_t *ctrl = ctx;
+  struct usp_pwm_controller_t *ctrl = ctx;
   assert(ctrl != NULL);
 
-  udev_unref(ctrl->uspc_udev);
+  udev_unref(ctrl->usppc_udev);
   free(ctrl);
 }
 

@@ -11,88 +11,88 @@
 #include "pwm.h"
 #include "pwm_internal.h"
 
-struct us_pwm_test_t {
+struct usp_pwm_test_t {
   int uspt_enabled;
   float uspt_duty_cycle;
   float uspt_frequency;
 };
 
 int
-uspt_set_duty_cycle(struct us_pwm_t *pwm, float duty_cycle)
+uspt_set_duty_cycle(struct usp_pwm_t *pwm, float duty_cycle)
 {
-  struct us_pwm_test_t *pwm_test = pwm->uspwm_ctx;
+  struct usp_pwm_test_t *pwm_test = pwm->usppwm_ctx;
   pwm_test->uspt_duty_cycle = duty_cycle;
   return USP_OK;
 }
 
 int
-uspt_get_duty_cycle(struct us_pwm_t *pwm, float *out_duty_cycle)
+uspt_get_duty_cycle(struct usp_pwm_t *pwm, float *out_duty_cycle)
 {
-  struct us_pwm_test_t *pwm_test = pwm->uspwm_ctx;
+  struct usp_pwm_test_t *pwm_test = pwm->usppwm_ctx;
   *out_duty_cycle = pwm_test->uspt_duty_cycle;
   return USP_OK;
 }
 
 int
-uspt_set_frequency(struct us_pwm_t *pwm, float frequency)
+uspt_set_frequency(struct usp_pwm_t *pwm, float frequency)
 {
-  struct us_pwm_test_t *pwm_test = pwm->uspwm_ctx;
+  struct usp_pwm_test_t *pwm_test = pwm->usppwm_ctx;
   pwm_test->uspt_frequency = frequency;
   return USP_OK;
 }
 
 int
-uspt_get_frequency(struct us_pwm_t *pwm, float *out_frequency)
+uspt_get_frequency(struct usp_pwm_t *pwm, float *out_frequency)
 {
-  struct us_pwm_test_t *pwm_test = pwm->uspwm_ctx;
+  struct usp_pwm_test_t *pwm_test = pwm->usppwm_ctx;
   *out_frequency = pwm_test->uspt_frequency;
   return USP_OK;
 }
 
 void
-uspt_init(struct us_pwm_t *pwm, struct us_pwm_test_t *pwm_test)
+uspt_init(struct usp_pwm_t *pwm, struct usp_pwm_test_t *pwm_test)
 {
-  pwm->uspwm_ctx = pwm_test;
-  pwm->uspwm_set_duty_cycle_func = uspt_set_duty_cycle;
-  pwm->uspwm_get_duty_cycle_func = uspt_get_duty_cycle;
-  pwm->uspwm_set_frequency_func = uspt_set_frequency;
-  pwm->uspwm_get_frequency_func = uspt_get_frequency;
+  pwm->usppwm_ctx = pwm_test;
+  pwm->usppwm_set_duty_cycle_func = uspt_set_duty_cycle;
+  pwm->usppwm_get_duty_cycle_func = uspt_get_duty_cycle;
+  pwm->usppwm_set_frequency_func = uspt_set_frequency;
+  pwm->usppwm_get_frequency_func = uspt_get_frequency;
 }
 
 START_TEST(test_pwm_set_get_duty_cycle_valid)
 {
   int rv;
   float duty_cycle;
-  struct us_pwm_t *pwm;
-  struct us_pwm_test_t pwm_test;
-  pwm = us_pwm_new(NULL, USPWM_TEST);
+  struct usp_pwm_t *pwm;
+  struct usp_pwm_test_t pwm_test;
+  pwm = usp_pwm_new(NULL, USPWM_TEST);
   uspt_init(pwm, &pwm_test);
 
-  rv = us_pwm_set_duty_cycle(pwm, 0.0f);
+  rv = usp_pwm_set_duty_cycle(pwm, 0.0f);
   fail_if(rv != USP_OK, "Return value not expected value.");
-  rv = us_pwm_get_duty_cycle(pwm, &duty_cycle);
+  rv = usp_pwm_get_duty_cycle(pwm, &duty_cycle);
   fail_if(rv != USP_OK, "Return value not expected value.");
   fail_if(duty_cycle != 0.0f, "Duty cycle not expected value.");
 
-  rv = us_pwm_set_duty_cycle(pwm, 33.33333333333f);
+  rv = usp_pwm_set_duty_cycle(pwm, 33.33333333333f);
   fail_if(rv != USP_OK, "Return value not expected value.");
-  rv = us_pwm_get_duty_cycle(pwm, &duty_cycle);
+  rv = usp_pwm_get_duty_cycle(pwm, &duty_cycle);
   fail_if(rv != USP_OK, "Return value not expected value.");
   fail_if(duty_cycle != 33.33333333333f, "Duty cycle not expected value.");
 
-  rv = us_pwm_set_duty_cycle(pwm, 50.0f);
+  rv = usp_pwm_set_duty_cycle(pwm, 50.0f);
   fail_if(rv != USP_OK, "Return value not expected value.");
-  rv = us_pwm_get_duty_cycle(pwm, &duty_cycle);
+  rv = usp_pwm_get_duty_cycle(pwm, &duty_cycle);
   fail_if(rv != USP_OK, "Return value not expected value.");
   fail_if(duty_cycle != 50.0f, "Duty cycle not expected value.");
 
-  rv = us_pwm_set_duty_cycle(pwm, 100.0f);
+  rv = usp_pwm_set_duty_cycle(pwm, 100.0f);
   fail_if(rv != USP_OK, "Return value not expected value.");
-  rv = us_pwm_get_duty_cycle(pwm, &duty_cycle);
+  rv = usp_pwm_get_duty_cycle(pwm, &duty_cycle);
   fail_if(rv != USP_OK, "Return value not expected value.");
   fail_if(duty_cycle != 100.0f, "Duty cycle not expected value.");
 
-  us_pwm_unref(pwm);
+  usp_pwm_unref(pwm);
 }
 END_TEST
 
@@ -100,27 +100,27 @@ START_TEST(test_pwm_set_get_duty_cycle_invalid)
 {
   int rv;
   float duty_cycle;
-  struct us_pwm_t *pwm;
-  struct us_pwm_test_t pwm_test;
-  pwm = us_pwm_new(NULL, USPWM_TEST);
+  struct usp_pwm_t *pwm;
+  struct usp_pwm_test_t pwm_test;
+  pwm = usp_pwm_new(NULL, USPWM_TEST);
   uspt_init(pwm, &pwm_test);
 
-  rv = us_pwm_set_duty_cycle(pwm, 100.0f);
+  rv = usp_pwm_set_duty_cycle(pwm, 100.0f);
   fail_if(rv != USP_OK, "Return value not expected value.");
 
-  rv = us_pwm_set_duty_cycle(pwm, 110.0f);
+  rv = usp_pwm_set_duty_cycle(pwm, 110.0f);
   fail_if(rv == USP_OK, "Return value not expected value.");
-  rv = us_pwm_get_duty_cycle(pwm, &duty_cycle);
+  rv = usp_pwm_get_duty_cycle(pwm, &duty_cycle);
   fail_if(rv != USP_OK, "Return value not expected value.");
   fail_if(duty_cycle != 100.0f, "Duty cycle not expected value.");
 
-  rv = us_pwm_set_duty_cycle(pwm, -0.1f);
+  rv = usp_pwm_set_duty_cycle(pwm, -0.1f);
   fail_if(rv == USP_OK, "Return value not expected value.");
-  rv = us_pwm_get_duty_cycle(pwm, &duty_cycle);
+  rv = usp_pwm_get_duty_cycle(pwm, &duty_cycle);
   fail_if(rv != USP_OK, "Return value not expected value.");
   fail_if(duty_cycle != 100.0f, "Duty cycle not expected value.");
 
-  us_pwm_unref(pwm);
+  usp_pwm_unref(pwm);
 }
 END_TEST
 
@@ -128,36 +128,36 @@ START_TEST(test_pwm_set_get_frequency_valid)
 {
   int rv;
   float frequency;
-  struct us_pwm_t *pwm;
-  struct us_pwm_test_t pwm_test;
-  pwm = us_pwm_new(NULL, USPWM_TEST);
+  struct usp_pwm_t *pwm;
+  struct usp_pwm_test_t pwm_test;
+  pwm = usp_pwm_new(NULL, USPWM_TEST);
   uspt_init(pwm, &pwm_test);
 
-  rv = us_pwm_set_frequency(pwm, 0.0f);
+  rv = usp_pwm_set_frequency(pwm, 0.0f);
   fail_if(rv != USP_OK, "Return value not expected value.");
-  rv = us_pwm_get_frequency(pwm, &frequency);
+  rv = usp_pwm_get_frequency(pwm, &frequency);
   fail_if(rv != USP_OK, "Return value not expected value.");
   fail_if(frequency != 0.0f, "Frequency not expected value.");
 
-  rv = us_pwm_set_frequency(pwm, 33.33333333333f);
+  rv = usp_pwm_set_frequency(pwm, 33.33333333333f);
   fail_if(rv != USP_OK, "Return value not expected value.");
-  rv = us_pwm_get_frequency(pwm, &frequency);
+  rv = usp_pwm_get_frequency(pwm, &frequency);
   fail_if(rv != USP_OK, "Return value not expected value.");
   fail_if(frequency != 33.33333333333f, "Frequency not expected value.");
 
-  rv = us_pwm_set_frequency(pwm, 50.0f);
+  rv = usp_pwm_set_frequency(pwm, 50.0f);
   fail_if(rv != USP_OK, "Return value not expected value.");
-  rv = us_pwm_get_frequency(pwm, &frequency);
+  rv = usp_pwm_get_frequency(pwm, &frequency);
   fail_if(rv != USP_OK, "Return value not expected value.");
   fail_if(frequency != 50.0f, "Frequency not expected value.");
 
-  rv = us_pwm_set_frequency(pwm, 100.0f);
+  rv = usp_pwm_set_frequency(pwm, 100.0f);
   fail_if(rv != USP_OK, "Return value not expected value.");
-  rv = us_pwm_get_frequency(pwm, &frequency);
+  rv = usp_pwm_get_frequency(pwm, &frequency);
   fail_if(rv != USP_OK, "Return value not expected value.");
   fail_if(frequency != 100.0f, "Frequency not expected value.");
 
-  us_pwm_unref(pwm);
+  usp_pwm_unref(pwm);
 }
 END_TEST
 
@@ -165,21 +165,21 @@ START_TEST(test_pwm_set_get_frequency_invalid)
 {
   int rv;
   float frequency;
-  struct us_pwm_t *pwm;
-  struct us_pwm_test_t pwm_test;
-  pwm = us_pwm_new(NULL, USPWM_TEST);
+  struct usp_pwm_t *pwm;
+  struct usp_pwm_test_t pwm_test;
+  pwm = usp_pwm_new(NULL, USPWM_TEST);
   uspt_init(pwm, &pwm_test);
 
-  rv = us_pwm_set_frequency(pwm, 100.0f);
+  rv = usp_pwm_set_frequency(pwm, 100.0f);
   fail_if(rv != USP_OK, "Return value not expected value.");
 
-  rv = us_pwm_set_frequency(pwm, -0.1f);
+  rv = usp_pwm_set_frequency(pwm, -0.1f);
   fail_if(rv == USP_OK, "Return value not expected value.");
-  rv = us_pwm_get_frequency(pwm, &frequency);
+  rv = usp_pwm_get_frequency(pwm, &frequency);
   fail_if(rv != USP_OK, "Return value not expected value.");
   fail_if(frequency != 100.0f, "Frequency not expected value.");
 
-  us_pwm_unref(pwm);
+  usp_pwm_unref(pwm);
 }
 END_TEST
 

@@ -22,15 +22,15 @@
  *
  * @return A new empty list to hold pwms.
  */
-struct us_pwm_list_t *
-us_pwm_list_new()
+struct usp_pwm_list_t *
+usp_pwm_list_new()
 {
-  struct us_pwm_list_t *list = NULL;
-  list = malloc(sizeof(struct us_pwm_list_t));
-  list->uspl_count = 0;
-  list->uspl_ctrl = NULL;
-  list->uspl_head = NULL;
-  usp_ref_init(list, us_pwm_list_delete);
+  struct usp_pwm_list_t *list = NULL;
+  list = malloc(sizeof(struct usp_pwm_list_t));
+  list->usppl_count = 0;
+  list->usppl_ctrl = NULL;
+  list->usppl_head = NULL;
+  uspp_ref_init(list, usp_pwm_list_delete);
   return list;
 }
 
@@ -42,12 +42,12 @@ us_pwm_list_new()
  * @param ctx The list of pwms to delete.
  */
 void
-us_pwm_list_delete(void *ctx)
+usp_pwm_list_delete(void *ctx)
 {
-  struct us_pwm_list_t *list = ctx;
-  struct us_pwm_list_entry_t *entry, *next;
-  us_pwm_list_foreach_safe(list, entry, next) {
-    us_pwm_unref(entry->uspl_pwm);
+  struct usp_pwm_list_t *list = ctx;
+  struct usp_pwm_list_entry_t *entry, *next;
+  usp_pwm_list_foreach_safe(list, entry, next) {
+    usp_pwm_unref(entry->usppl_pwm);
     free(entry);
   }
   free(list);
@@ -60,23 +60,23 @@ us_pwm_list_delete(void *ctx)
  * @param list The list of pwms to add the pwm to.
  * @param pwm The pwm to add to the list of pwms.
  *
- * @return A status code.
+ * @return A statusp code.
  */
 int
-us_pwm_list_add(struct us_pwm_list_t *list, struct us_pwm_t *pwm)
+usp_pwm_list_add(struct usp_pwm_list_t *list, struct usp_pwm_t *pwm)
 {
-  struct us_pwm_list_entry_t *list_entry = NULL;
+  struct usp_pwm_list_entry_t *list_entry = NULL;
   assert(list != NULL);
   assert(pwm != NULL);
 
-  list_entry = malloc(sizeof(struct us_pwm_list_entry_t));
-  list_entry->uspl_pwm = pwm;
-  usp_ref(pwm);
+  list_entry = malloc(sizeof(struct usp_pwm_list_entry_t));
+  list_entry->usppl_pwm = pwm;
+  uspp_ref(pwm);
 
-  list->uspl_count++;
+  list->usppl_count++;
 
-  list_entry->uspl_next = list->uspl_head;
-  list->uspl_head = list_entry;
+  list_entry->usppl_next = list->usppl_head;
+  list->usppl_head = list_entry;
   return USP_OK;
 }
 
@@ -87,10 +87,10 @@ us_pwm_list_add(struct us_pwm_list_t *list, struct us_pwm_t *pwm)
  *
  * @return The head of the list, may be NULL.
  */
-struct us_pwm_list_entry_t *
-us_pwm_list_head(struct us_pwm_list_t *list)
+struct usp_pwm_list_entry_t *
+usp_pwm_list_head(struct usp_pwm_list_t *list)
 {
-  return list->uspl_head;
+  return list->usppl_head;
 }
 
 /**
@@ -100,10 +100,10 @@ us_pwm_list_head(struct us_pwm_list_t *list)
  *
  * @return The next entry in the list, NULL if we are at the end.
  */
-struct us_pwm_list_entry_t *
-us_pwm_list_entry_next(struct us_pwm_list_entry_t *entry)
+struct usp_pwm_list_entry_t *
+usp_pwm_list_entry_next(struct usp_pwm_list_entry_t *entry)
 {
-  return entry == NULL ? NULL : entry->uspl_next;
+  return entry == NULL ? NULL : entry->usppl_next;
 }
 
 /**
@@ -112,9 +112,9 @@ us_pwm_list_entry_next(struct us_pwm_list_entry_t *entry)
  * @param list The list of pwms to take a reference to.
  */
 void
-us_pwm_list_ref(struct us_pwm_list_t *list)
+usp_pwm_list_ref(struct usp_pwm_list_t *list)
 {
-  usp_ref(list);
+  uspp_ref(list);
 }
 
 /**
@@ -123,7 +123,7 @@ us_pwm_list_ref(struct us_pwm_list_t *list)
  * @param list The list of pwms to release a reference to.
  */
 void
-us_pwm_list_unref(struct us_pwm_list_t *list)
+usp_pwm_list_unref(struct usp_pwm_list_t *list)
 {
-  usp_unref(list);
+  uspp_unref(list);
 }

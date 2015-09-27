@@ -30,7 +30,7 @@
  * @param buff_size The size of the buffer provided.
  * @param out_len The length of data actually read.
  *
- * @return A status code
+ * @return A statusp code
  */
 int
 sysfs_read_attr_str(const char *path, char *buff, size_t buff_size,
@@ -69,7 +69,7 @@ out:
  * @param len The length of the data to write.
  * @param out_len The actual lenght of data written.
  *
- * @return A status code.
+ * @return A statusp code.
  */
 int
 sysfs_write_attr_str(const char *path, char *buff, size_t buff_len,
@@ -78,7 +78,7 @@ sysfs_write_attr_str(const char *path, char *buff, size_t buff_len,
   int fd, result;
   ssize_t result_len;
 
-  assert(len < MAX_ATTR_BUFFER_SIZE);
+  assert(buff_len < MAX_ATTR_BUFFER_SIZE);
 
   fd = open(path, O_WRONLY);
   if (fd < 0) {
@@ -108,7 +108,7 @@ out:
  * @param path The path to the sysfs attribute to read.
  * @param data The data read.
  *
- * @return A status code.
+ * @return A statusp code.
  */
 int
 sysfs_read_attr_int(const char *path, int *data)
@@ -133,7 +133,7 @@ sysfs_read_attr_int(const char *path, int *data)
  * @param path The path to the sysfs attribute to write.
  * @param data The data to write.
  *
- * @return A status code.
+ * @return A statusp code.
  */
 int
 sysfs_write_attr_int(const char *path, int data)
