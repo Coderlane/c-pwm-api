@@ -6,6 +6,8 @@
  * @date 2015-09-06
  */
 
+#include <sys/stat.h>
+
 #include <check.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -13,49 +15,74 @@
 #include "pwm.h"
 #include "pwm_internal.h"
 
-int
-usp_test_file_new(const char *path)
+static char *test_file_str = "./test_file";
+
+void
+test_file_setup()
 {
   int fd;
 
-  fd = open(path, O_RDONLY | O_CREAT);
-  assert(fd >= 0);
+  fd = open(test_file_str, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IWUSR);
+  fail_if(fd < 0, "Failed to create test file.");
   close(fd);
-
-  return USP_OK;
 }
 
-int
-usp_test_file_delete(const char *path)
+void
+test_file_cleanup()
 {
   int rc;
-  rc = unlink(path);
-  assert(rc == 0);
-
-  return USP_OK;
+  rc = unlink(test_file_str);
+  fail_if(rc != 0, "Failed to clean up test file.");
 }
 
 START_TEST(test_set_get_str)
 {
-  usp_test_file_new("test_set_get_str");
+  int rc;
+  ssize_t out_len, data_len;
+  const char *data = "test data";
+  char data_out[16];
 
-  usp_test_file_delete("test_set_get_str");
+  data_len = strlen(data);
+
+  rc = sysfs_write_attr_str(test_file_str, data, strlen(data), &out_len);
+  fail_if(rc != USP_OK);
+  fail_if(out_len != data_len);
+
+  rc = sysfs_read_attr_str(test_file_str, data_out, sizeof(data_out), &out_len);
+  fail_if(rc != USP_OK);
+  fail_if(out_len != data_len);
+  printf("data: \"%s\" data_out \"%s\"", data, data_out);
+  fail_if(strcmp(data, data_out) != 0);
 }
 END_TEST
 
 START_TEST(test_set_get_int)
 {
-  usp_test_file_new("test_set_get_str");
+  int rc;
+  int data, data_out;
 
-  usp_test_file_delete("test_set_get_str");
+  data = 0;
+  rc = sysfs_write_attr_int(test_file_str, data);
+  fail_if(rc != USP_OK);
+
+  rc = sysfs_read_attr_int(test_file_str, &data_out);
+  fail_if(rc != USP_OK);
+  fail_if(data_out != data);
 }
 END_TEST
 
 START_TEST(test_set_get_float)
 {
-  usp_test_file_new("test_set_get_str");
+  int rc;
+  float data, data_out;
 
-  usp_test_file_delete("test_set_get_str");
+  data = 0.0f;
+  rc = sysfs_write_attr_float(test_file_str, data);
+  fail_if(rc != USP_OK);
+
+  rc = sysfs_read_attr_float(test_file_str, &data_out);
+  fail_if(rc != USP_OK);
+  fail_if(data_out != data);
 }
 END_TEST
 
@@ -63,12 +90,14 @@ Suite *
 suite_su_new()
 {
   Suite *suite_su = suite_create("suite_sysfs_util");
-  TCase *case_su_set_get_valid = tcase_create("case_set_get_valid");
+  TCase *case_su_sg_valid = tcase_create("case_set_get_valid");
 
-  tcase_add_test(case_su_set_get_valid, test_set_get_str);
-  tcase_add_test(case_su_set_get_valid, test_set_get_int);
-  tcase_add_test(case_su_set_get_valid, test_set_get_float);
-  suite_add_tcase(suite_su, case_su_set_get_valid);
+  tcase_add_test(case_su_sg_valid, test_set_get_str);
+  tcase_add_test(case_su_sg_valid, test_set_get_int);
+  tcase_add_test(case_su_sg_valid, test_set_get_float);
+  tcase_add_checked_fixture(case_su_sg_valid, test_file_setup,
+                            test_file_cleanup);
+  suite_add_tcase(suite_su, case_su_sg_valid);
   return suite_su;
 }
 

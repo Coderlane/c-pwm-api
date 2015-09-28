@@ -51,6 +51,8 @@ sysfs_read_attr_str(const char *path, char *buff, size_t buff_size,
     goto out;
   }
 
+  /* Always make the last character NULL */
+  buff[result_len] = '\0';
   *out_len = result_len;
   result = USP_OK;
 
@@ -121,7 +123,6 @@ sysfs_read_attr_int(const char *path, int *data)
   if(rc != USP_OK)
     return rc;
 
-  buff[INT_BUFFER_SIZE - 1] = '\0';
   // TODO: Check read length.
   sscanf(buff, "%d", data);
   return USP_OK;
@@ -168,7 +169,6 @@ sysfs_read_attr_float(const char *path, float *data)
   if(rc != USP_OK)
     return rc;
 
-  buff[INT_BUFFER_SIZE - 1] = '\0';
   // TODO: Check read length.
   sscanf(buff, "%f", data);
 
