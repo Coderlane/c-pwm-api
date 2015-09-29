@@ -25,8 +25,6 @@ struct usp_pwm_t;
  * Controller
  */
 
-
-
 /* Search Functions */
 
 typedef int (*usp_pwm_search_func_t)(struct usp_controller_t *);
@@ -102,6 +100,7 @@ int usp_pwm_list_add(struct usp_pwm_list_t *list, struct usp_pwm_t *pwm);
 /**
  * sysfs
  */
+
 int sysfs_read_attr_str(const char *path, char *buff, size_t buff_size,
                         ssize_t *out_len);
 int sysfs_write_attr_str(const char *path, const char *buff, size_t buff_len,
@@ -110,5 +109,19 @@ int sysfs_read_attr_int(const char *path, int *data);
 int sysfs_write_attr_int(const char *path, int data);
 int sysfs_read_attr_float(const char *path, float *data);
 int sysfs_write_attr_float(const char *path, float data);
+
+
+/**
+ * ODroid C1
+ */
+
+#define ODC1_DUTY_MAX 1023
+#define ODC1_DUTY_MIN 0
+
+#define ODC1_FREQ_HZ_MAX 1000000
+#define ODC1_FREQ_HZ_MIN 0
+
+int odc1_percent_to_duty_cycle(float percent, int *out_duty_cycle);
+int odc1_duty_cycle_to_percent(int duty_cycle, float *out_percent);
 
 #endif /* USP_PWM_INTERNAL_H */
