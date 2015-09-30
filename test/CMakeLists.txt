@@ -11,8 +11,8 @@ foreach(CURRENT_TEST_SOURCE_FILE ${TEST_SOURCE_FILES})
 	string(REPLACE "test_" "" CURRENT_TEST ${CURRENT_TEST_BINARY})
 
 	add_executable(${CURRENT_TEST_BINARY} ${CURRENT_TEST_SOURCE_FILE})
-	target_link_libraries(${CURRENT_TEST_BINARY} ${USPWM_LIB} ${CHECK_LIBRARIES} pthread)
-	target_include_directories(${CURRENT_TEST_BINARY} PUBLIC ${USPWM_INCLUDE})
+	target_link_libraries(${CURRENT_TEST_BINARY} ${LIBUSP_LIB} ${CHECK_LIBRARIES} pthread)
+	target_include_directories(${CURRENT_TEST_BINARY} PUBLIC ${LIBUSP_INCLUDE})
 
 	add_test(${CURRENT_TEST} ${CURRENT_TEST_BINARY})
 endforeach()

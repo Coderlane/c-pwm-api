@@ -1,0 +1,12 @@
+prefix=@LIBUSP_INSTALL_PREFIX@
+exec_prefix=@LIBUSP_INSTALL_EXEC_PREFIX@
+libdir=@LIBUSP_INSTALL_LIBDIR@
+includedir=@LIBUSP_INSTALL_INCLUDEDIR@
+
+Name: libusp
+Description: A C library for managing pwm output.
+Version: @LIBUSP_VERSION@
+Requires.private: libudev >= 150
+Libs: -L${libdir} -lusp
+Libs.private: -ludev
+Cflags: -I${includedir}
