@@ -65,7 +65,7 @@ START_TEST(test_pwm_set_get_duty_cycle_valid)
   float duty_cycle;
   struct usp_pwm_t *pwm;
   struct usp_pwm_test_t pwm_test;
-  pwm = usp_pwm_new(NULL, USPWM_TEST);
+  pwm = usp_pwm_new(NULL, "test", USPWM_TEST);
   uspt_init(pwm, &pwm_test);
 
   rv = usp_pwm_set_duty_cycle(pwm, 0.0f);
@@ -102,7 +102,7 @@ START_TEST(test_pwm_set_get_duty_cycle_invalid)
   float duty_cycle;
   struct usp_pwm_t *pwm;
   struct usp_pwm_test_t pwm_test;
-  pwm = usp_pwm_new(NULL, USPWM_TEST);
+  pwm = usp_pwm_new(NULL, "test", USPWM_TEST);
   uspt_init(pwm, &pwm_test);
 
   rv = usp_pwm_set_duty_cycle(pwm, 100.0f);
@@ -130,7 +130,7 @@ START_TEST(test_pwm_set_get_frequency_valid)
   float frequency;
   struct usp_pwm_t *pwm;
   struct usp_pwm_test_t pwm_test;
-  pwm = usp_pwm_new(NULL, USPWM_TEST);
+  pwm = usp_pwm_new(NULL, "test", USPWM_TEST);
   uspt_init(pwm, &pwm_test);
 
   rv = usp_pwm_set_frequency(pwm, 0.0f);
@@ -167,7 +167,7 @@ START_TEST(test_pwm_set_get_frequency_invalid)
   float frequency;
   struct usp_pwm_t *pwm;
   struct usp_pwm_test_t pwm_test;
-  pwm = usp_pwm_new(NULL, USPWM_TEST);
+  pwm = usp_pwm_new(NULL, "test", USPWM_TEST);
   uspt_init(pwm, &pwm_test);
 
   rv = usp_pwm_set_frequency(pwm, 100.0f);

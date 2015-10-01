@@ -40,6 +40,8 @@ struct usp_pwm_list_t *usp_controller_get_pwms(struct usp_controller_t *ctrl);
 void usp_pwm_ref(struct usp_pwm_t *pwm);
 void usp_pwm_unref(struct usp_pwm_t *pwm);
 
+const char *usp_pwm_get_name(struct usp_pwm_t *pwm);
+
 int usp_pwm_enable(struct usp_pwm_t *pwm);
 int usp_pwm_disable(struct usp_pwm_t *pwm);
 

@@ -69,11 +69,12 @@ struct usp_pwm_t {
   usp_pwm_get_float_func_t uspwm_get_frequency_func;
 
   enum usp_pwm_type_e uspwm_type;
+  const char *uspwm_name;
   void *uspwm_ctx;
   struct usp_pwm_t *uspwm_next;
 };
 
-struct usp_pwm_t *usp_pwm_new(struct udev_device *device,
+struct usp_pwm_t *usp_pwm_new(struct udev_device *device, const char *name,
                               enum usp_pwm_type_e type);
 void usp_pwm_delete(void *ctx);
 

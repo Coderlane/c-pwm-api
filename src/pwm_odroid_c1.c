@@ -21,6 +21,7 @@
 
 struct usp_pwm_odroid_c1_t {
   int odc1_id;
+  const char *odc1_name;
   const char *odc1_off_str;
   const char *odc1_on_str;
   const char *odc1_enabled_attr;
@@ -30,6 +31,7 @@ struct usp_pwm_odroid_c1_t {
 
 struct usp_pwm_odroid_c1_t odc1_zero = {
     .odc1_id = 0,
+    .odc1_name = "odc1_pwm0",
     .odc1_on_str = "PWM_0 : on",
     .odc1_off_str = "PWM_0 : off",
     .odc1_enabled_attr = "/sys/devices/platform/pwm-ctrl/enabled0",
@@ -39,6 +41,7 @@ struct usp_pwm_odroid_c1_t odc1_zero = {
 
 struct usp_pwm_odroid_c1_t odc1_one = {
     .odc1_id = 1,
+    .odc1_name = "odc1_pwm1",
     .odc1_on_str = "PWM_1 : on",
     .odc1_off_str = "PWM_1 : off",
     .odc1_enabled_attr = "/sys/devices/platform/pwm-ctrl/enabled1",
@@ -69,11 +72,13 @@ struct usp_pwm_t *
 odc1_new(struct udev_device *device, int id)
 {
   struct usp_pwm_t *pwm;
+  struct usp_pwm_odroid_c1_t *odc1_pwm;
   assert(id == 0 || id == 1);
 
-  pwm = usp_pwm_new(device, USPWM_ODC1);
-  pwm->uspwm_ctx = id == 0 ? &odc1_zero : &odc1_one;
+  odc1_pwm = id == 0 ? &odc1_zero : &odc1_one;
 
+  pwm = usp_pwm_new(device, odc1_pwm->odc1_name, USPWM_ODC1);
+  pwm->uspwm_ctx = odc1_pwm;
   pwm->uspwm_enable_func = odc1_enable;
   pwm->uspwm_disable_func = odc1_disable;
   pwm->uspwm_get_duty_cycle_func = odc1_get_duty_cycle;

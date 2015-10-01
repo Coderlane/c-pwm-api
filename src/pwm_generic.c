@@ -25,7 +25,8 @@
  * @return
  */
 struct usp_pwm_t *
-usp_pwm_new(struct udev_device *device, enum usp_pwm_type_e type)
+usp_pwm_new(struct udev_device *device, const char *name,
+            enum usp_pwm_type_e type)
 {
   struct usp_pwm_t *pwm = NULL;
 
@@ -35,6 +36,7 @@ usp_pwm_new(struct udev_device *device, enum usp_pwm_type_e type)
   udev_device_ref(pwm->uspwm_device);
   pwm->uspwm_device = device;
   pwm->uspwm_type = type;
+  pwm->uspwm_name = name;
   usp_ref_init(pwm, usp_pwm_delete);
 
   return pwm;
@@ -78,6 +80,19 @@ void
 usp_pwm_unref(struct usp_pwm_t *pwm)
 {
   usp_unref(pwm);
+}
+
+/**
+ * @brief Get the name of the pwm.
+ *
+ * @param pwm The pwm to get the name of.
+ *
+ * @return A char array of the name of the pwm.
+ */
+const char *
+usp_pwm_get_name(struct usp_pwm_t *pwm)
+{
+  return pwm->uspwm_name;
 }
 
 /**
