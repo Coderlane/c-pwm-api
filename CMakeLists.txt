@@ -69,7 +69,7 @@ set(PKGCONFIG_INSTALL_DIR lib/pkgconfig CACHE PATH
   "Installation directory for pkg-config files")
 
 # Set install targets
-install(TARGETS ${LIBUSP_LIBRARY}
+install(TARGETS ${LIBUSP_LIB}
   DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(FILES ${HEADER_FILES}
   DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}")
