@@ -25,6 +25,12 @@ struct usp_pwm_t;
  * Controller
  */
 
+struct usp_controller_t {
+  struct usp_pwm_list_t *uspc_dev_list;
+  struct udev *uspc_udev;
+  bool uspc_initialized;
+};
+
 /* Search Functions */
 
 typedef int (*usp_pwm_search_func_t)(struct usp_controller_t *);
@@ -35,14 +41,6 @@ int odc1_search(struct usp_controller_t *ctrl);
 int usp_controller_search(struct usp_controller_t *ctrl);
 int usp_controller_add_pwm(struct usp_controller_t *ctrl,
                            struct usp_pwm_t *pwm);
-
-struct usp_controller_t {
-  USP_REF_PRIVATE
-
-  struct usp_pwm_list_t *uspc_dev_list;
-  struct udev *uspc_udev;
-  bool uspc_initialized;
-};
 
 /**
  * PWM

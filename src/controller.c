@@ -36,7 +36,6 @@ usp_controller_new()
   ctrl->uspc_initialized = false;
 
   ctrl->uspc_udev = udev_new();
-  usp_ref_init(ctrl, usp_controller_delete);
   ctrl->uspc_dev_list = usp_pwm_list_new();
 
   /* Leave this for last. */
@@ -50,11 +49,8 @@ usp_controller_new()
  * @param ctx The PWM controller to delete.
  */
 void
-usp_controller_delete(void *ctx)
+usp_controller_delete(struct usp_controller_t *ctrl)
 {
-  struct usp_controller_t *ctrl = ctx;
-  assert(ctrl != NULL);
-
   udev_unref(ctrl->uspc_udev);
   usp_pwm_list_unref(ctrl->uspc_dev_list);
   free(ctrl);
@@ -90,7 +86,6 @@ usp_controller_search(struct usp_controller_t *ctrl)
 int
 usp_controller_add_pwm(struct usp_controller_t *ctrl, struct usp_pwm_t *pwm)
 {
-
   assert(ctrl->uspc_initialized == false);
   return usp_pwm_list_add(ctrl->uspc_dev_list, pwm);
 }

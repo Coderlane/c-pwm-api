@@ -107,6 +107,19 @@ usp_pwm_list_entry_next(struct usp_pwm_list_entry_t *entry)
 }
 
 /**
+ * @brief Get the pwm from the pwm_entry.
+ *
+ * @param entry The entry to get the pwm out of.
+ *
+ * @return The pwm in this entry.
+ */
+struct usp_pwm_t *
+usp_pwm_list_entry_get_pwm(struct usp_pwm_list_entry_t *entry)
+{
+  return entry->uspl_pwm;
+}
+
+/**
  * @brief Take a reference to a list of PWMs.
  *
  * @param list The list of pwms to take a reference to.

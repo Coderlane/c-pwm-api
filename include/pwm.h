@@ -30,7 +30,7 @@ enum usp_pwm_error_e {
  */
 
 struct usp_controller_t *usp_controller_new();
-void usp_controller_delete(void *ctx);
+void usp_controller_delete(struct usp_controller_t *ctrl);
 struct usp_pwm_list_t *usp_controller_get_pwms(struct usp_controller_t *ctrl);
 
 /**
@@ -72,5 +72,7 @@ void usp_pwm_list_unref(struct usp_pwm_list_t *list);
 struct usp_pwm_list_entry_t *
 usp_pwm_list_entry_next(struct usp_pwm_list_entry_t *entry);
 struct usp_pwm_list_entry_t *usp_pwm_list_head(struct usp_pwm_list_t *list);
+struct usp_pwm_t *
+usp_pwm_list_entry_get_pwm(struct usp_pwm_list_entry_t *entry);
 
 #endif /* USP_PWM_H */
