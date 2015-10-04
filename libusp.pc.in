@@ -7,6 +7,5 @@ Name: libusp
 Description: A C library for managing pwm output.
 Version: @LIBUSP_VERSION@
 Requires.private: libudev >= 150
-Libs: -L${libdir} -lusp
-Libs.private: -ludev
+Libs: -L${libdir} -lusp -ludev
 Cflags: -I${includedir}
