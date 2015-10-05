@@ -34,7 +34,7 @@ struct usp_pwm_odroid_c1_t odc1_zero = {
     .odc1_name = "odc1_pwm0",
     .odc1_on_str = "PWM_0 : on",
     .odc1_off_str = "PWM_0 : off",
-    .odc1_enabled_attr = "/sys/devices/platform/pwm-ctrl/enabled0",
+    .odc1_enabled_attr = "/sys/devices/platform/pwm-ctrl/enable0",
     .odc1_duty_cycle_attr = "/sys/devices/platform/pwm-ctrl/duty0",
     .odc1_frequency_attr = "/sys/devices/platform/pwm-ctrl/freq0"
 };
@@ -44,7 +44,7 @@ struct usp_pwm_odroid_c1_t odc1_one = {
     .odc1_name = "odc1_pwm1",
     .odc1_on_str = "PWM_1 : on",
     .odc1_off_str = "PWM_1 : off",
-    .odc1_enabled_attr = "/sys/devices/platform/pwm-ctrl/enabled1",
+    .odc1_enabled_attr = "/sys/devices/platform/pwm-ctrl/enable1",
     .odc1_duty_cycle_attr = "/sys/devices/platform/pwm-ctrl/duty1",
     .odc1_frequency_attr = "/sys/devices/platform/pwm-ctrl/freq1"
 };
@@ -125,10 +125,10 @@ odc1_search(struct usp_controller_t *ctrl)
     udev_list_entry_foreach(dev_attribute, dev_attributes)
     {
       attr = udev_list_entry_get_name(dev_attribute);
-      if (strcmp(attr, "enabled0") == 0) {
+      if (strcmp(attr, "enable0") == 0) {
         pwm = odc1_new(dev, 0);
         usp_controller_add_pwm(ctrl, pwm);
-      } else if (strcmp(attr, "enabled1") == 0) {
+      } else if (strcmp(attr, "enable1") == 0) {
         pwm = odc1_new(dev, 1);
         usp_controller_add_pwm(ctrl, pwm);
       }
