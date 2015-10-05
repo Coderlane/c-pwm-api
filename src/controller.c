@@ -38,6 +38,8 @@ usp_controller_new()
   ctrl->uspc_udev = udev_new();
   ctrl->uspc_dev_list = usp_pwm_list_new();
 
+  usp_controller_search(ctrl);
+
   /* Leave this for last. */
   ctrl->uspc_initialized = true;
   return ctrl;
