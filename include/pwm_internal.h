@@ -35,8 +35,9 @@ struct usp_controller_t {
 
 typedef int (*usp_pwm_search_func_t)(struct usp_controller_t *);
 int odc1_search(struct usp_controller_t *ctrl);
+int test_search(struct usp_controller_t *ctrl);
 
-#define USP_SEARCH_FUNC_COUNT 1
+#define USP_SEARCH_FUNC_COUNT 2
 
 int usp_controller_search(struct usp_controller_t *ctrl);
 int usp_controller_add_pwm(struct usp_controller_t *ctrl,

@@ -19,7 +19,8 @@
  * Controller
  */
 
-static usp_pwm_search_func_t usp_controller_search_funcs[] = {odc1_search};
+static usp_pwm_search_func_t usp_controller_search_funcs[] = {odc1_search,
+                                                              test_search};
 
 /**
  * @brief Create a new PWM controller to collect individual PWMs.
