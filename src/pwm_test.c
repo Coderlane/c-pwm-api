@@ -9,10 +9,11 @@
 #include <libudev.h>
 
 #include <assert.h>
+#include <fcntl.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "pwm_internal.h"
 #include "pwm.h"
@@ -47,6 +48,8 @@ struct usp_pwm_test_t test_one = {
     .test_frequency_attr = "freq1"
 };
 
+int test_create_file(const char *file);
+int test_delete_file(const char *file);
 int test_disable(struct usp_pwm_t *);
 int test_enable(struct usp_pwm_t *);
 int test_set_duty_cycle(struct usp_pwm_t *, float);
@@ -72,7 +75,7 @@ test_new(struct udev_device *device, int id)
 
   test_pwm = id == 0 ? &test_zero : &test_one;
 
-  pwm = usp_pwm_new(device, test_pwm->test_name, USPWM_ODC1);
+  pwm = usp_pwm_new(device, test_pwm->test_name, USPWM_TEST);
   pwm->uspwm_ctx = test_pwm;
   pwm->uspwm_enable_func = test_enable;
   pwm->uspwm_disable_func = test_disable;
@@ -110,8 +113,12 @@ test_enable(struct usp_pwm_t *pwm)
   int rc;
   ssize_t write_len;
   struct usp_pwm_test_t *test_pwm;
-  assert(pwm->uspwm_type == USPWM_ODC1);
+  assert(pwm->uspwm_type == USPWM_TEST);
   test_pwm = pwm->uspwm_ctx;
+
+  test_create_file(test_pwm->test_enabled_attr);
+  test_create_file(test_pwm->test_duty_cycle_attr);
+  test_create_file(test_pwm->test_frequency_attr);
 
   rc = sysfs_write_attr_str(test_pwm->test_enabled_attr, test_pwm->test_on_str,
                             strlen(test_pwm->test_on_str), &write_len);
@@ -125,19 +132,42 @@ test_disable(struct usp_pwm_t *pwm)
   int rc;
   ssize_t write_len;
   struct usp_pwm_test_t *test_pwm;
-  assert(pwm->uspwm_type == USPWM_ODC1);
+  assert(pwm->uspwm_type == USPWM_TEST);
   test_pwm = pwm->uspwm_ctx;
 
   rc = sysfs_write_attr_str(test_pwm->test_enabled_attr, test_pwm->test_on_str,
                             strlen(test_pwm->test_on_str), &write_len);
+
+  test_delete_file(test_pwm->test_enabled_attr);
+  test_delete_file(test_pwm->test_duty_cycle_attr);
+  test_delete_file(test_pwm->test_frequency_attr);
+
   return rc;
+}
+
+int
+test_create_file(const char *file)
+{
+  int fd;
+  fd = creat(file, 0777);
+  if (fd < 0)
+    return USP_FILE_ERROR;
+
+  close(fd);
+  return USP_OK;
+}
+
+int
+test_delete_file(const char *file)
+{
+  return unlink(file) ? USP_FILE_ERROR : USP_OK;
 }
 
 int
 test_set_duty_cycle(struct usp_pwm_t *pwm, float duty_cycle)
 {
   struct usp_pwm_test_t *test_pwm;
-  assert(pwm->uspwm_type == USPWM_ODC1);
+  assert(pwm->uspwm_type == USPWM_TEST);
   test_pwm = pwm->uspwm_ctx;
 
   return sysfs_write_attr_float(test_pwm->test_duty_cycle_attr, duty_cycle);
@@ -147,7 +177,7 @@ int
 test_get_duty_cycle(struct usp_pwm_t *pwm, float *out_duty_cycle)
 {
   struct usp_pwm_test_t *test_pwm;
-  assert(pwm->uspwm_type == USPWM_ODC1);
+  assert(pwm->uspwm_type == USPWM_TEST);
   test_pwm = pwm->uspwm_ctx;
 
   return sysfs_read_attr_float(test_pwm->test_duty_cycle_attr, out_duty_cycle);
@@ -157,7 +187,7 @@ int
 test_set_frequency(struct usp_pwm_t *pwm, float frequency)
 {
   struct usp_pwm_test_t *test_pwm;
-  assert(pwm->uspwm_type == USPWM_ODC1);
+  assert(pwm->uspwm_type == USPWM_TEST);
   test_pwm = pwm->uspwm_ctx;
 
   return sysfs_write_attr_float(test_pwm->test_frequency_attr, frequency);
@@ -167,7 +197,7 @@ int
 test_get_frequency(struct usp_pwm_t *pwm, float *out_frequency)
 {
   struct usp_pwm_test_t *test_pwm;
-  assert(pwm->uspwm_type == USPWM_ODC1);
+  assert(pwm->uspwm_type == USPWM_TEST);
   test_pwm = pwm->uspwm_ctx;
 
   return sysfs_read_attr_float(test_pwm->test_frequency_attr, out_frequency);
