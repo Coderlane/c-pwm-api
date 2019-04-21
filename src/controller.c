@@ -22,6 +22,9 @@
 static usp_pwm_search_func_t usp_controller_search_funcs[] = {odc1_search,
                                                               test_search};
 
+#define USP_SEARCH_FUNC_COUNT \
+  sizeof(usp_controller_search_funcs) / sizeof(usp_controller_search_funcs[0])
+
 /**
  * @brief Create a new PWM controller to collect individual PWMs.
  *
@@ -71,7 +74,7 @@ int
 usp_controller_search(struct usp_controller_t *ctrl)
 {
   assert(ctrl->uspc_initialized == false);
-  for (int i = 0; i < USP_SEARCH_FUNC_COUNT; i++) {
+  for (size_t i = 0; i < USP_SEARCH_FUNC_COUNT; i++) {
     usp_controller_search_funcs[i](ctrl);
   }
   return USP_OK;
