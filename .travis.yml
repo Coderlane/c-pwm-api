@@ -1,7 +1,8 @@
 language: c
+dist: xenial
 
 compiler:
-  - clang-3.6
+  - clang
 
 addons:
   apt:
@@ -10,12 +11,9 @@ addons:
       - check
       - libudev-dev
       - pkg-config
-      - clang-3.6
       - lcov
     sources:
       - kalakris-cmake
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-precise-3.6
 
 before_script:
   - mkdir build
