@@ -33,6 +33,24 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -Wall -Wextra -Wpedantic")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -DDEBUG")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -DNDEBUG -O3")
 
+# Code Coverage Configuration
+add_library(coverage_config INTERFACE)
+
+option(CODE_COVERAGE "Enable coverage reporting" OFF)
+if(CODE_COVERAGE)
+  # Add required flags (GCC & LLVM/Clang)
+  target_compile_options(coverage_config INTERFACE
+    -O0        # no optimization
+    -g         # generate debug info
+    --coverage # sets all required flags
+  )
+  if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
+    target_link_options(coverage_config INTERFACE --coverage)
+  else()
+    target_link_libraries(coverage_config INTERFACE --coverage)
+  endif()
+endif()
+
 # Source
 add_subdirectory(${LIBUSP_SRC})
 add_subdirectory(${LIBUSP_INCLUDE})
@@ -43,7 +61,7 @@ include_directories(${UDEV_INCLUDE_DIRS})
 
 # Library
 add_library(${LIBUSP_LIB} SHARED ${SOURCE_FILES})
-target_link_libraries(${LIBUSP_LIB} ${UDEV_LIBRARIES} ${M_LIB})
+target_link_libraries(${LIBUSP_LIB} ${UDEV_LIBRARIES} ${M_LIB} coverage_config)
 
 # Tests
 add_subdirectory(${LIBUSP_TEST})
