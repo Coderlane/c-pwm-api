@@ -121,7 +121,17 @@ int sysfs_write_attr_float(const char *path, float data);
 #define ODC1_FREQ_HZ_MAX 1000000
 #define ODC1_FREQ_HZ_MIN 0
 
+struct usp_pwm_t *odc1_new(struct udev_device *device, int id);
+
 int odc1_percent_to_duty_cycle(float percent, int *out_duty_cycle);
 int odc1_duty_cycle_to_percent(int duty_cycle, float *out_percent);
+
+
+/**
+ * Test
+ */
+
+struct usp_pwm_t *test_new(struct udev_device *device, int id);
+
 
 #endif /* USP_PWM_INTERNAL_H */
