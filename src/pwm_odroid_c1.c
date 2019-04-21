@@ -49,15 +49,12 @@ struct usp_pwm_odroid_c1_t odc1_one = {
     .odc1_frequency_attr = "/sys/devices/platform/pwm-ctrl/freq1"
 };
 
-int odc1_disable(struct usp_pwm_t *);
-int odc1_enable(struct usp_pwm_t *);
-int odc1_set_duty_cycle(struct usp_pwm_t *, float);
-int odc1_get_duty_cycle(struct usp_pwm_t *, float *);
-int odc1_set_frequency(struct usp_pwm_t *, float);
-int odc1_get_frequency(struct usp_pwm_t *, float *);
-
-int odc1_percent_to_duty_cycle(float percent, int *out_duty_cycle);
-int odc1_duty_cycle_to_percent(int duty_cycle, float *out_percent);
+static int odc1_disable(struct usp_pwm_t *);
+static int odc1_enable(struct usp_pwm_t *);
+static int odc1_set_duty_cycle(struct usp_pwm_t *, float);
+static int odc1_get_duty_cycle(struct usp_pwm_t *, float *);
+static int odc1_set_frequency(struct usp_pwm_t *, float);
+static int odc1_get_frequency(struct usp_pwm_t *, float *);
 
 /**
  * @brief Create a new ODroid C1 pwm. Creates a new generic pwm
@@ -139,7 +136,7 @@ odc1_search(struct usp_controller_t *ctrl)
   return USP_OK;
 }
 
-int
+static int
 odc1_enable(struct usp_pwm_t *pwm)
 {
   int rc;
@@ -154,7 +151,7 @@ odc1_enable(struct usp_pwm_t *pwm)
   return rc;
 }
 
-int
+static int
 odc1_disable(struct usp_pwm_t *pwm)
 {
   int rc;
@@ -168,7 +165,7 @@ odc1_disable(struct usp_pwm_t *pwm)
   return rc;
 }
 
-int
+static int
 odc1_set_duty_cycle(struct usp_pwm_t *pwm, float duty_cycle)
 {
   int rc, duty;
@@ -183,7 +180,7 @@ odc1_set_duty_cycle(struct usp_pwm_t *pwm, float duty_cycle)
   return sysfs_write_attr_int(odc1_pwm->odc1_duty_cycle_attr, duty);
 }
 
-int
+static int
 odc1_get_duty_cycle(struct usp_pwm_t *pwm, float *out_duty_cycle)
 {
   int rc, duty;
@@ -197,7 +194,7 @@ odc1_get_duty_cycle(struct usp_pwm_t *pwm, float *out_duty_cycle)
   return odc1_duty_cycle_to_percent(duty, out_duty_cycle);
 }
 
-int
+static int
 odc1_set_frequency(struct usp_pwm_t *pwm, float frequency)
 {
   struct usp_pwm_odroid_c1_t *odc1_pwm;
@@ -207,7 +204,7 @@ odc1_set_frequency(struct usp_pwm_t *pwm, float frequency)
   return sysfs_write_attr_int(odc1_pwm->odc1_frequency_attr, (int)frequency);
 }
 
-int
+static int
 odc1_get_frequency(struct usp_pwm_t *pwm, float *out_frequency)
 {
   int freq, rc;
