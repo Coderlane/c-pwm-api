@@ -152,7 +152,7 @@ usp_pwm_set_frequency(struct usp_pwm_t *pwm, float frequency)
 {
   if (frequency < 0.0f)
     return USP_INVALID_RANGE;
-  return pwm->uspwm_set_duty_cycle_func(pwm, frequency);
+  return pwm->uspwm_set_frequency_func(pwm, frequency);
 }
 
 /**
@@ -182,5 +182,5 @@ int
 usp_pwm_get_frequency(struct usp_pwm_t *pwm, float *out_frequency)
 {
   assert(out_frequency != NULL);
-  return pwm->uspwm_get_duty_cycle_func(pwm, out_frequency);
+  return pwm->uspwm_get_frequency_func(pwm, out_frequency);
 }
