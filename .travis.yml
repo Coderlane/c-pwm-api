@@ -12,8 +12,6 @@ addons:
       - libudev-dev
       - pkg-config
       - lcov
-    sources:
-      - kalakris-cmake
 
 before_script:
   - mkdir build
