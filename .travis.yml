@@ -6,24 +6,32 @@ compiler:
 addons:
   apt:
     packages:
-    - cmake
-    - check
-    - libudev-dev
-    - pkg-config
-    - clang-3.6
+      - cmake
+      - check
+      - libudev-dev
+      - pkg-config
+      - clang-3.6
+      - lcov
     sources:
-    - kalakris-cmake
-    - ubuntu-toolchain-r-test
-    - llvm-toolchain-precise-3.6
+      - kalakris-cmake
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.6
 
 before_script:
   - mkdir build
   - cd build
-  - cmake -DCMAKE_BUILD_TYPE=Debug ..
+  - cmake -DCMAKE_BUILD_TYPE=Debug -DCODE_COVERAGE=ON ..
 
 script:
-  - make 
+  - make
   - ctest --output-on-failure
+
+after_success:
+  # Upload coverage data
+  - lcov --directory . --capture --output-file coverage.info
+  - lcov --remove coverage.info '/usr/*' "${HOME}"'/.cache/*' '*/test/*' --output-file coverage.info
+  - lcov --list coverage.info
+  - bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
 
 notifications:
   email: false
