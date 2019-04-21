@@ -48,14 +48,14 @@ struct usp_pwm_test_t test_one = {
     .test_frequency_attr = "freq1"
 };
 
-int test_create_file(const char *file);
-int test_delete_file(const char *file);
-int test_disable(struct usp_pwm_t *);
-int test_enable(struct usp_pwm_t *);
-int test_set_duty_cycle(struct usp_pwm_t *, float);
-int test_get_duty_cycle(struct usp_pwm_t *, float *);
-int test_set_frequency(struct usp_pwm_t *, float);
-int test_get_frequency(struct usp_pwm_t *, float *);
+static int test_create_file(const char *file);
+static int test_delete_file(const char *file);
+static int test_disable(struct usp_pwm_t *);
+static int test_enable(struct usp_pwm_t *);
+static int test_set_duty_cycle(struct usp_pwm_t *, float);
+static int test_get_duty_cycle(struct usp_pwm_t *, float *);
+static int test_set_frequency(struct usp_pwm_t *, float);
+static int test_get_frequency(struct usp_pwm_t *, float *);
 
 /**
  * @brief Create a new test pwm. Creates a new generic pwm
@@ -107,7 +107,7 @@ test_search(struct usp_controller_t *ctrl)
   return USP_OK;
 }
 
-int
+static int
 test_enable(struct usp_pwm_t *pwm)
 {
   int rc;
@@ -126,7 +126,7 @@ test_enable(struct usp_pwm_t *pwm)
   return rc;
 }
 
-int
+static int
 test_disable(struct usp_pwm_t *pwm)
 {
   int rc;
@@ -145,7 +145,7 @@ test_disable(struct usp_pwm_t *pwm)
   return rc;
 }
 
-int
+static int
 test_create_file(const char *file)
 {
   int fd;
@@ -157,13 +157,13 @@ test_create_file(const char *file)
   return USP_OK;
 }
 
-int
+static int
 test_delete_file(const char *file)
 {
   return unlink(file) ? USP_FILE_ERROR : USP_OK;
 }
 
-int
+static int
 test_set_duty_cycle(struct usp_pwm_t *pwm, float duty_cycle)
 {
   struct usp_pwm_test_t *test_pwm;
@@ -173,7 +173,7 @@ test_set_duty_cycle(struct usp_pwm_t *pwm, float duty_cycle)
   return sysfs_write_attr_float(test_pwm->test_duty_cycle_attr, duty_cycle);
 }
 
-int
+static int
 test_get_duty_cycle(struct usp_pwm_t *pwm, float *out_duty_cycle)
 {
   struct usp_pwm_test_t *test_pwm;
@@ -183,7 +183,7 @@ test_get_duty_cycle(struct usp_pwm_t *pwm, float *out_duty_cycle)
   return sysfs_read_attr_float(test_pwm->test_duty_cycle_attr, out_duty_cycle);
 }
 
-int
+static int
 test_set_frequency(struct usp_pwm_t *pwm, float frequency)
 {
   struct usp_pwm_test_t *test_pwm;
@@ -193,7 +193,7 @@ test_set_frequency(struct usp_pwm_t *pwm, float frequency)
   return sysfs_write_attr_float(test_pwm->test_frequency_attr, frequency);
 }
 
-int
+static int
 test_get_frequency(struct usp_pwm_t *pwm, float *out_frequency)
 {
   struct usp_pwm_test_t *test_pwm;
