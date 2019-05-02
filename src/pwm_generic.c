@@ -2,7 +2,7 @@
  * @file pwm_generic.c
  * @brief
  * @author Travis Lane
- * @version 0.0.1
+ * @version 0.0.2
  * @date 2015-09-05
  */
 
@@ -56,6 +56,11 @@ usp_pwm_delete(void *ctx)
 
   if (pwm->uspwm_device != NULL)
     udev_device_unref(pwm->uspwm_device);
+
+  if (pwm->uspwm_ctx != NULL && pwm->uspwm_ctx_delete_func != NULL) {
+    pwm->uspwm_ctx_delete_func(pwm->uspwm_ctx);
+  }
+
   free(pwm);
 }
 

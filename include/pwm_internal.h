@@ -2,7 +2,7 @@
  * @file pwm_internal.h
  * @brief
  * @author Travis Lane
- * @version 0.0.1
+ * @version 0.0.2
  * @date 2015-09-05
  */
 
@@ -52,6 +52,7 @@ typedef int (*usp_pwm_set_float_func_t)(struct usp_pwm_t *, float);
 typedef int (*usp_pwm_get_float_func_t)(struct usp_pwm_t *, float *);
 typedef int (*usp_pwm_generic_func_t)(struct usp_pwm_t *);
 typedef int (*usp_pwm_generic_void_func_t)(struct usp_pwm_t *, void *);
+typedef void (*usp_pwm_ctx_delete_func_t)(void *);
 
 struct usp_pwm_t {
   USP_REF_PRIVATE
@@ -67,7 +68,10 @@ struct usp_pwm_t {
 
   enum usp_pwm_type_e uspwm_type;
   const char *uspwm_name;
+
   void *uspwm_ctx;
+  usp_pwm_ctx_delete_func_t uspwm_ctx_delete_func;
+
   struct usp_pwm_t *uspwm_next;
 };
 
@@ -119,11 +123,19 @@ int sysfs_write_attr_float(const char *path, float data);
 #define ODC1_FREQ_HZ_MAX 1000000
 #define ODC1_FREQ_HZ_MIN 0
 
-struct usp_pwm_t *odc1_new(struct udev_device *device, int id);
+struct usp_pwm_odroid_c1_t {
+  unsigned int odc1_id;
+  char *odc1_name;
+  char *odc1_enabled_attr;
+  char *odc1_duty_cycle_attr;
+  char *odc1_frequency_attr;
+};
+
+struct usp_pwm_t *odc1_new(struct udev_device *device,
+    const char *path, unsigned int id);
 
 int odc1_percent_to_duty_cycle(float percent, int *out_duty_cycle);
 int odc1_duty_cycle_to_percent(int duty_cycle, float *out_percent);
-
 
 /**
  * Test
