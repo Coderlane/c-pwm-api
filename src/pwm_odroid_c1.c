@@ -86,6 +86,24 @@ odc1_new(struct udev_device *device, int id)
   return pwm;
 }
 
+static bool
+odc1_is_pwm(const char *driver)
+{
+  return strcmp(driver, "pwm-ctrl") == 0;
+}
+
+static int
+odc1_pwm_id(const char *attr)
+{
+  int id;
+
+  if (sscanf(attr, "enable%d", &id) != 1) {
+    return -1;
+  } else {
+    return id;
+  }
+}
+
 /**
  * @brief Search for pwms and attach them to a controller.
  *
@@ -113,7 +131,7 @@ odc1_search(struct usp_controller_t *ctrl)
     path = udev_list_entry_get_name(dev_entry);
     dev = udev_device_new_from_syspath(ctrl->uspc_udev, path);
     driver = udev_device_get_driver(dev);
-    if (strcmp(driver, "pwm-ctrl") != 0) {
+    if (!odc1_is_pwm(driver)) {
       udev_device_unref(dev);
       continue;
     }
@@ -121,12 +139,12 @@ odc1_search(struct usp_controller_t *ctrl)
     dev_attributes = udev_device_get_sysattr_list_entry(dev);
     udev_list_entry_foreach(dev_attribute, dev_attributes)
     {
+      int id;
+
       attr = udev_list_entry_get_name(dev_attribute);
-      if (strcmp(attr, "enable0") == 0) {
-        pwm = odc1_new(dev, 0);
-        usp_controller_add_pwm(ctrl, pwm);
-      } else if (strcmp(attr, "enable1") == 0) {
-        pwm = odc1_new(dev, 1);
+      id = odc1_pwm_id(attr);
+      if (id >= 0) {
+        pwm = odc1_new(dev, id);
         usp_controller_add_pwm(ctrl, pwm);
       }
     }
