@@ -89,7 +89,7 @@ sysfs_write_attr_str(const char *path, const char *buff, size_t buff_len,
   }
 
   result_len = write(fd, buff, buff_len);
-  if (result_len < 0) {
+  if (result_len < 0 || buff_len > (size_t) result_len) {
     result = USP_IO_ERROR;
     goto out;
   }

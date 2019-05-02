@@ -2,7 +2,7 @@
  * @file pwm_odroid_c1.c
  * @brief
  * @author Travis Lane
- * @version 0.0.1
+ * @version 0.0.2
  * @date 2015-09-21
  */
 
@@ -15,46 +15,73 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <limits.h>
 
 #include "pwm_internal.h"
 #include "pwm.h"
 
-struct usp_pwm_odroid_c1_t {
-  int odc1_id;
-  const char *odc1_name;
-  const char *odc1_off_str;
-  const char *odc1_on_str;
-  const char *odc1_enabled_attr;
-  const char *odc1_duty_cycle_attr;
-  const char *odc1_frequency_attr;
-};
-
-struct usp_pwm_odroid_c1_t odc1_zero = {
-    .odc1_id = 0,
-    .odc1_name = "odc1_pwm0",
-    .odc1_on_str = "PWM_0 : on",
-    .odc1_off_str = "PWM_0 : off",
-    .odc1_enabled_attr = "/sys/devices/platform/pwm-ctrl/enable0",
-    .odc1_duty_cycle_attr = "/sys/devices/platform/pwm-ctrl/duty0",
-    .odc1_frequency_attr = "/sys/devices/platform/pwm-ctrl/freq0"
-};
-
-struct usp_pwm_odroid_c1_t odc1_one = {
-    .odc1_id = 1,
-    .odc1_name = "odc1_pwm1",
-    .odc1_on_str = "PWM_1 : on",
-    .odc1_off_str = "PWM_1 : off",
-    .odc1_enabled_attr = "/sys/devices/platform/pwm-ctrl/enable1",
-    .odc1_duty_cycle_attr = "/sys/devices/platform/pwm-ctrl/duty1",
-    .odc1_frequency_attr = "/sys/devices/platform/pwm-ctrl/freq1"
-};
-
+static void odc1_delete(void *ctx);
 static int odc1_disable(struct usp_pwm_t *);
 static int odc1_enable(struct usp_pwm_t *);
 static int odc1_set_duty_cycle(struct usp_pwm_t *, float);
 static int odc1_get_duty_cycle(struct usp_pwm_t *, float *);
 static int odc1_set_frequency(struct usp_pwm_t *, float);
 static int odc1_get_frequency(struct usp_pwm_t *, float *);
+
+struct usp_pwm_odroid_c1_t *
+odc1_new_ctx(const char *path, unsigned int id)
+{
+  struct usp_pwm_odroid_c1_t *odc1_pwm = NULL;
+  size_t path_len, id_len;
+
+  odc1_pwm = calloc(sizeof(*odc1_pwm), 1);
+  if (odc1_pwm == NULL) {
+    goto err;
+  }
+
+  // Figure out variable lengths
+  path_len = strlen(path);
+  id_len = floor(log10(id)) + 1;
+
+  // Allocate space for variables
+  odc1_pwm->odc1_name = malloc(sizeof(char *) *
+      (sizeof("odc1_pwm") + id_len));
+  if (odc1_pwm->odc1_name == NULL) {
+    goto err;
+  }
+
+  odc1_pwm->odc1_enabled_attr = malloc(sizeof(char *) *
+      (path_len + sizeof("/enable") + id_len));
+  if (odc1_pwm->odc1_enabled_attr == NULL) {
+    goto err;
+  }
+
+  odc1_pwm->odc1_duty_cycle_attr = malloc(sizeof(char *) *
+      (path_len + sizeof("/duty") + id_len));
+  if (odc1_pwm->odc1_duty_cycle_attr == NULL) {
+    goto err;
+  }
+
+  odc1_pwm->odc1_frequency_attr = malloc(sizeof(char *) *
+      (path_len + sizeof("/freq") + id_len));
+  if (odc1_pwm->odc1_frequency_attr == NULL) {
+    goto err;
+  }
+
+  // Setup the context
+  odc1_pwm->odc1_id = id;
+  sprintf(odc1_pwm->odc1_name, "odc1_pwm%u", id);
+  sprintf(odc1_pwm->odc1_enabled_attr, "%s/enable%u", path, id);
+  sprintf(odc1_pwm->odc1_duty_cycle_attr, "%s/duty%u", path, id);
+  sprintf(odc1_pwm->odc1_frequency_attr, "%s/freq%u", path, id);
+
+  goto out;
+err:
+  odc1_delete(odc1_pwm);
+  odc1_pwm = NULL;
+out:
+  return odc1_pwm;
+}
 
 /**
  * @brief Create a new ODroid C1 pwm. Creates a new generic pwm
@@ -66,16 +93,20 @@ static int odc1_get_frequency(struct usp_pwm_t *, float *);
  * @return A new pwm.
  */
 struct usp_pwm_t *
-odc1_new(struct udev_device *device, int id)
+odc1_new(struct udev_device *device,
+    const char *path, unsigned int id)
 {
-  struct usp_pwm_t *pwm;
-  struct usp_pwm_odroid_c1_t *odc1_pwm;
-  assert(id == 0 || id == 1);
+  struct usp_pwm_t *pwm = NULL;
+  struct usp_pwm_odroid_c1_t *odc1_pwm = NULL;
 
-  odc1_pwm = id == 0 ? &odc1_zero : &odc1_one;
+  odc1_pwm = odc1_new_ctx(path, id);
+  if (odc1_pwm == NULL) {
+    goto out;
+  }
 
   pwm = usp_pwm_new(device, odc1_pwm->odc1_name, USPWM_ODC1);
   pwm->uspwm_ctx = odc1_pwm;
+  pwm->uspwm_ctx_delete_func = odc1_delete;
   pwm->uspwm_enable_func = odc1_enable;
   pwm->uspwm_disable_func = odc1_disable;
   pwm->uspwm_get_duty_cycle_func = odc1_get_duty_cycle;
@@ -83,7 +114,29 @@ odc1_new(struct udev_device *device, int id)
   pwm->uspwm_get_frequency_func = odc1_get_frequency;
   pwm->uspwm_set_frequency_func = odc1_set_frequency;
 
+out:
+  if (pwm == NULL) {
+    odc1_delete(odc1_pwm);
+  }
+
   return pwm;
+}
+
+static void
+odc1_delete(void *ctx)
+{
+  struct usp_pwm_odroid_c1_t *odc1_pwm = (struct usp_pwm_odroid_c1_t *) ctx;
+
+  if (odc1_pwm == NULL) {
+    return;
+  }
+
+  free(odc1_pwm->odc1_name);
+  free(odc1_pwm->odc1_enabled_attr);
+  free(odc1_pwm->odc1_duty_cycle_attr);
+  free(odc1_pwm->odc1_frequency_attr);
+
+  free(odc1_pwm);
 }
 
 static bool
@@ -95,13 +148,16 @@ odc1_is_pwm(const char *driver)
 static int
 odc1_pwm_id(const char *attr)
 {
-  int id;
+  unsigned int id;
 
-  if (sscanf(attr, "enable%d", &id) != 1) {
+  if (sscanf(attr, "enable%u", &id) != 1) {
     return -1;
-  } else {
-    return id;
   }
+
+  if (id > INT_MAX) {
+    return USP_INVALID_RANGE;
+  }
+  return (int) id;
 }
 
 /**
@@ -144,7 +200,10 @@ odc1_search(struct usp_controller_t *ctrl)
       attr = udev_list_entry_get_name(dev_attribute);
       id = odc1_pwm_id(attr);
       if (id >= 0) {
-        pwm = odc1_new(dev, id);
+        pwm = odc1_new(dev, path, (unsigned int) id);
+        if (pwm == NULL) {
+          continue;
+        }
         usp_controller_add_pwm(ctrl, pwm);
       }
     }
@@ -157,30 +216,33 @@ odc1_search(struct usp_controller_t *ctrl)
 static int
 odc1_enable(struct usp_pwm_t *pwm)
 {
-  int rc;
-  ssize_t write_len;
   struct usp_pwm_odroid_c1_t *odc1_pwm;
+  char write_buf[32];
+  ssize_t write_len;
+
   assert(pwm->uspwm_type == USPWM_ODC1);
   odc1_pwm = pwm->uspwm_ctx;
 
-  rc = sysfs_write_attr_str(odc1_pwm->odc1_enabled_attr, odc1_pwm->odc1_on_str,
-                            strlen(odc1_pwm->odc1_on_str), &write_len);
-
-  return rc;
+  write_len = snprintf(write_buf, sizeof(write_buf) - 1,
+      "PWM_%u : on", odc1_pwm->odc1_id);
+  return sysfs_write_attr_str(odc1_pwm->odc1_enabled_attr,
+      write_buf, write_len, &write_len);
 }
 
 static int
 odc1_disable(struct usp_pwm_t *pwm)
 {
-  int rc;
-  ssize_t write_len;
   struct usp_pwm_odroid_c1_t *odc1_pwm;
+  char write_buf[32];
+  ssize_t write_len;
+
   assert(pwm->uspwm_type == USPWM_ODC1);
   odc1_pwm = pwm->uspwm_ctx;
 
-  rc = sysfs_write_attr_str(odc1_pwm->odc1_enabled_attr, odc1_pwm->odc1_on_str,
-                            strlen(odc1_pwm->odc1_on_str), &write_len);
-  return rc;
+  write_len = snprintf(write_buf, sizeof(write_buf) - 1,
+      "PWM_%u : off", odc1_pwm->odc1_id);
+  return sysfs_write_attr_str(odc1_pwm->odc1_enabled_attr,
+      write_buf, write_len, &write_len);
 }
 
 static int
